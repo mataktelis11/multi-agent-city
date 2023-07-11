@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi agent city traversal</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            width: 12px;
+            height: 12px;
+            border: 1px solid black;
+        }
+        .start {
+            background-color: green;
+        }
+        .end {
+            background-color: red;
+        }
+        .empty {
+            background-color: AliceBlue;
+        }		
+        .path {
+            background-color: yellow;
+        }
+        .wall {
+            background-color: brown;
+        }		
+        .agent {
+			background-color:blue;
+			display:block;
+			height:5px;
+			width:5px;
+			border-radius:10%;
+			border:2px solid #000;
+			margin:auto;
+			color:#fff;
+			line-height:50px;
+			text-align:center
+        }
+    </style>
+</head>
+<body>
+    <table id="grid"></table>
+	<p id="iteration"> Iteration:<p>
+	<button onclick="initializeSimulation()">Initialize simulation</button>
+	<button onclick="startSimulation()">Start Simulation</button>
+	<button onclick="pauseSimulation()">Pause Simulation</button>
+
+    <script>
+        // Parameters
+        var numRows = 55; 			// Number of rows in the grid
+        var numCols = 55; 			// Number of columns in the grid
+		
+		
+        var numAgents = 36; 		// Number of agents
+		var numWalls = 50;			// Number of walls
+		
+		
+		
+        var numIterations = 100; 	// Number of iterations
+		var currentIteration = 0;
+		
+		var grid = createGrid(numRows, numCols);
+        var agents;
+		var walls;
+        
+        var endCell = { row: numRows - 1, col: numCols - 1 };
+		
+		var stop = false;
+
+		// utility functions
+		function getRndInteger(min, max) {
+		  return Math.floor(Math.random() * (max - min+ 1) ) + min;
+		}
+		
+
+		function containsObject(obj, list) {
+			var i;
+			for (i = 0; i < list.length; i++) {
+				if (list[i].row === obj.row && list[i].col === obj.col) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		// source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+		function shuffle(array) {
+		  let currentIndex = array.length,  randomIndex;
+
+		  // While there remain elements to shuffle.
+		  while (currentIndex != 0) {
+
+			// Pick a remaining element.
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
+
+			// And swap it with the current element.
+			[array[currentIndex], array[randomIndex]] = [
+			  array[randomIndex], array[currentIndex]];
+		  }
+
+		  return array;
+		}
+		
+        // initialize  2D grid
+        function createGrid(rows, cols) {
+            var grid = [];
+            for (var i = 0; i < rows; i++) {
+                var row = [];
+                for (var j = 0; j < cols; j++) {
+                    row.push(0);
+                }
+                grid.push(row);
+            }
+            return grid;
+        }
+
+		var startCell = { row: 3, col: 3 };
+		
+		
+
+				
+		function createEntities(numRows, numCols, numAgents, numWalls) {
+			all = [...Array(numRows*numCols).keys()];
+			all =  shuffle(all); 
+			
+			entities = all.slice(0,numAgents + numWalls);
+			
+			k = 0;
+			
+			for (var i = 0; i < numAgents; i++) {
+			
+				var y = Math.floor(entities[k]/numCols);
+				var x = entities[k] - (y*numCols);
+                agents.push({ row: x, col: y });
+				
+				k = k + 1;
+            }
+			
+			for (var i = 0; i < numWalls; i++) {
+				var y = Math.floor(entities[k]/numCols);
+				var x = entities[k] - (y*numCols);
+                walls.push({ row: x, col: y });
+				k = k + 1;
+            }
+			
+			
+		}
+
+
+
+
+
+        // Update grid and display
+        function updateGrid() {
+            var table = document.getElementById("grid");
+            table.innerHTML = "";
+
+            for (var i = 0; i < numRows; i++) {
+                var row = document.createElement("tr");
+                for (var j = 0; j < numCols; j++) {
+                    var cell = document.createElement("td");
+					
+					var obj = { row: i, col: j };
+					//console.log(obj)
+					
+					if (containsObject(obj,walls)) {
+                        cell.className = "wall";												
+                    } else if (grid[i][j] === 1) {
+                        cell.className = "path";
+                    } else {
+						cell.className = "empty";
+					}
+
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+			
+			
+            // draw agents
+            for (var i = 0; i < numAgents; i++) {
+                var agentCell = agents[i];
+
+                var agentTd = table.rows[agentCell.row].cells[agentCell.col];
+                var agentElement = document.createElement("div");
+                agentElement.className = "agent";
+                agentTd.appendChild(agentElement);
+            }
+			
+			var par = document.getElementById("iteration");
+			par.innerHTML = "Iteration: " + currentIteration + "/" + numIterations;
+        }
+
+        // get neighboring cells
+        function getNeighbors(cell) {
+		
+            var neighbors = [];
+						
+			// all possible neighbors
+			var leftNeighbor = { row: cell.row, col: cell.col - 1 };
+			var rightNeighbor = { row: cell.row, col: cell.col + 1 };
+			var topNeighbor = { row: cell.row - 1, col: cell.col };
+			var bottomNeighor = { row: cell.row + 1, col: cell.col };
+
+            // check left neighbor
+            if (cell.col > 0 && !containsObject(leftNeighbor,walls) && !containsObject(leftNeighbor,agents)) {
+                neighbors.push(leftNeighbor);
+            }
+
+            // check right neighbor
+            if (cell.col < numCols - 1 && !containsObject(rightNeighbor,walls) && !containsObject(rightNeighbor,agents)) {
+                neighbors.push(rightNeighbor);
+            }
+
+            // check top neighbor
+            if (cell.row > 0 && !containsObject(topNeighbor,walls) && !containsObject(topNeighbor,agents)) {
+                neighbors.push(topNeighbor);
+            }
+
+            // check bottom neighbor
+            if (cell.row < numRows - 1 && !containsObject(bottomNeighor,walls) && !containsObject(bottomNeighor,agents)) {
+                neighbors.push(bottomNeighor);
+            }
+
+            return neighbors;
+        }
+
+
+		
+        // get next cell for agent
+        function getNextCell(cell) {
+            var neighbors = getNeighbors(cell);
+
+            return neighbors[getRndInteger(0, neighbors.length - 1)];
+        }
+		
+
+		
+	    // run simulation
+        function update() {
+		
+			if(stop) return;
+
+			// Move each agent
+			for (var i = 0; i < numAgents; i++) {
+				var currentCell = agents[i];
+				var nextCell = getNextCell(currentCell);
+				agents[i] = nextCell;
+				grid[currentCell.row][currentCell.col] = 1;
+				grid[nextCell.row][nextCell.col] = 1;
+				
+			}
+
+			updateGrid();
+			// itetation limit
+			currentIteration= currentIteration + 1;
+			if(currentIteration<=numIterations)
+				setTimeout(update, 100);
+        }	
+		
+
+		initializeSimulation();
+		
+		function startSimulation(){
+		
+			stop = false;
+			// Start simulation
+			updateGrid();
+
+			update();
+
+		}
+		
+		function pauseSimulation() {
+			stop = true;
+		}
+		
+		function initializeSimulation() {
+		
+			// halt simulation
+			stop = true;
+			currentIteration = 0;
+			
+		    grid = createGrid(numRows, numCols);
+
+			agents = [];
+			walls = [];
+			createEntities(numRows, numCols, numAgents, numWalls);
+			updateGrid()
+		
+		}
+		
+		
+    </script>
+</body>
+</html>
