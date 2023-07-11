@@ -2,9 +2,21 @@
 <html>
 <head>
     <title>Multi agent city traversal</title>
+	<link rel="stylesheet" href="bootstrap-5.3.0-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap-5.3.0-dist/">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <style>
+
+		body {
+			padding-bottom: 400px;
+			
+		}
+
+
+
         table {
             border-collapse: collapse;
+
         }
         td {
             width: 12px;
@@ -29,8 +41,8 @@
         .agent {
 			background-color:blue;
 			display:block;
-			height:5px;
-			width:5px;
+			height:8px;
+			width:8px;
 			border-radius:10%;
 			border:2px solid #000;
 			margin:auto;
@@ -40,21 +52,92 @@
         }
     </style>
 </head>
-<body>
-    <table id="grid"></table>
-	<p id="iteration"> Iteration:<p>
-	<button onclick="initializeSimulation()">Initialize simulation</button>
-	<button onclick="startSimulation()">Start Simulation</button>
-	<button onclick="pauseSimulation()">Pause Simulation</button>
+
+<body class="d-flex flex-column h-100">
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">
+		<img src="UNIPI_(logo).png" alt="" width="30"  class="d-inline-block align-text-top">
+		Intelligent Agents in a city
+		</a>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+		<div class="navbar-nav">
+			<a class="nav-link active" aria-current="page" href="#">Home</a>
+			<a class="nav-link" href="#">About</a>
+		</div>
+    </div>
+	</div>
+	</nav>
+
+	
+	<div class="container">
+
+		<div class="row">
+
+		  <div class="col-auto">
+			<table id="grid"></table>
+		  </div>
+
+
+		  <div class="col">
+
+			
+
+				<!-- card -->
+				<div class="card">
+					<div class="card-img-top">
+						<img src="logo1.png" class="img-fluid mx-auto d-block" alt="card image 3">
+					</div>
+					<div class="card-block d-flex flex-column">
+						<p class="text-justify" id="iteration"> Iteration:<p></p>
+						<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()">Initialize simulation</button>
+
+						<button type="button" class="btn btn-dark m-1" onclick="startSimulation()">Start Simulation</button>
+						
+						<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()">Pause Simulation</button>
+					</div>
+				</div>
+				<!-- card -->
+	
+			
+
+		  </div>
+
+		  <!-- <div class="col text-center">
+
+			<div class="row"><p id="iteration"> Iteration:<p></p></div>
+			<div class="row">
+				<div class="form-outline" style="width: 22rem;">
+				<input min="10" max="20" type="number" id="typeNumber" class="form-control" />
+				<label class="form-label" for="typeNumber">Number input</label>
+			</div>
+
+			<div class="row"><button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()">Initialize simulation</button></div>
+
+			<div class="row"><button type="button" class="btn btn-dark m-1" onclick="startSimulation()">Start Simulation</button></div>
+			
+			<div class="row"><button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()">Pause Simulation</button></div>
+		  </div>
+
+		</div> -->
+	</div>
+
+
+	
+	
+	
+
+
 
     <script>
         // Parameters
-        var numRows = 55; 			// Number of rows in the grid
-        var numCols = 55; 			// Number of columns in the grid
+        var numRows = 80; 			// Number of rows in the grid
+        var numCols = 80; 			// Number of columns in the grid
 		
 		
-        var numAgents = 36; 		// Number of agents
-		var numWalls = 50;			// Number of walls
+        var numAgents = 4; 		// Number of agents
+		var numWalls = 230;			// Number of walls
 		
 		
 		
@@ -295,5 +378,18 @@
 		
 		
     </script>
+
+	
+
+
+<footer class="footer mt-auto py-3 bg-body-tertiary">
+	<div class="container">
+	  <span class="text-body-secondary">Place sticky footer content here.</span>
+	</div>
+  </footer>
+
+
+
+  <script src="bootstrap-5.3.0-dist/js/bootstrap.min.js"></script>
 </body>
 </html>
