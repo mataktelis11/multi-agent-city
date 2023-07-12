@@ -161,17 +161,17 @@
         // Global Parameters
 
 		// Map size
-        var numRows = 80; 			// Number of rows in the grid
-        var numCols = 80; 			// Number of columns in the grid
+        var numRows = 10; 			// Number of rows in the grid 80
+        var numCols = 10; 			// Number of columns in the grid 80
 		
 		// Map entities
-        var numAgents = 10; 		// Number of agents
-		var numGoals = 5; 			// Number of goals
-		var numWalls = 730;			// Number of walls
-		var numEnergyPots = 100;	// Number of energy pots
-		var numGold = 45;			// Number of gold tokens
+        var numAgents = 3; 		// Number of agents 10
+		var numGoals = 3; 			// Number of goals 5
+		var numWalls = 10;			// Number of walls 730
+		var numEnergyPots = 2;	// Number of energy pots 100
+		var numGold = 2;			// Number of gold tokens 45
 		
-		var agentEnergy = 35;		// Base/Max energy of an agent
+		var agentEnergy = 1235;		// Base/Max energy of an agent 35
 
 		// Prices
 		var energyPotPrice = 2;		// Price of Energy pot in gold
@@ -180,7 +180,9 @@
 		var energyPerPot = 10;		// Energy points given by one pot
 		
 
-		
+		var agent_memory;
+
+
         var numIterations = 100; 	// Number of iterations
 		var currentIteration = 0;
 		
@@ -243,7 +245,17 @@
         }
 
 		
-		
+		function createGridMEM(rows, cols) {
+            var grid = [];
+            for (var i = 0; i < rows; i++) {
+                var row = [];
+                for (var j = 0; j < cols; j++) {
+                    row.push(false);
+                }
+                grid.push(row);
+            }
+            return grid;
+        }	
 
 				
 		function createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold) {
@@ -403,6 +415,24 @@
             return neighbors[getRndInteger(0, neighbors.length - 1)];
         }
 
+		// explore blind
+		function make_a_move(i){
+
+			
+			var curr_mem = agent_memory[i];
+			curr_mem[agents[i].row][agents[i].col] = true;
+		
+			var neighbors = getNeighbors(agents[i]);
+
+			for(var k=0; k<neighbors.length; k++){
+				if(curr_mem[neighbors[k].row][neighbors[k].col] == false)
+					return neighbors[k];
+			}
+
+			return neighbors[getRndInteger(0, neighbors.length - 1)];
+		}
+
+
 		function checkEnd() {
 			var sum = 0;
 			for (var i = 0; i < numAgents; i++) {
@@ -417,7 +447,7 @@
 		
 
 		
-	    // run simulation
+	    // run simulation of one step
         function update() {
 		
 			if(stop) return;
@@ -439,7 +469,8 @@
 				
 
 				var currentCell = agents[i];
-				var nextCell = getNextCell(currentCell);
+				//var nextCell = getNextCell(currentCell);
+				var nextCell = make_a_move(i);
 				agents[i] = nextCell;
 
 				energyValues[i] -= 1;
@@ -497,12 +528,18 @@
 		    grid = createGrid(numRows, numCols);
 
 			agents = [];
-			energyValues = new Array(numAgents).fill(agentEnergy);;
-			collectedGold = new Array(numAgents).fill(0);;
-			collectedPots = new Array(numAgents).fill(0);;
+			energyValues = new Array(numAgents).fill(agentEnergy);
+			collectedGold = new Array(numAgents).fill(0);
+			collectedPots = new Array(numAgents).fill(0);
 
 			createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
 			updateGrid();
+
+
+			agent_memory = [];
+			for(var i=0; i<agents.length; i++){
+				agent_memory.push(createGridMEM(numRows, numCols));
+			}
 
 
 
