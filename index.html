@@ -7,11 +7,10 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <style>
 
-		body {
-			padding-bottom: 400px;
-			
-		}
 
+		main > .container {
+			padding: 15px 15px 0;
+		}
 
 
         table {
@@ -23,17 +22,14 @@
             height: 12px;
             border: 1px solid black;
         }
-        .start {
-            background-color: green;
-        }
-        .end {
-            background-color: red;
+        .goal {
+            background-color: #6c3483;
         }
         .empty {
             background-color: AliceBlue;
         }		
         .path {
-            background-color: yellow;
+            background-color: #95a5a6;
         }
         .wall {
             background-color: brown;
@@ -44,33 +40,52 @@
 			height:8px;
 			width:8px;
 			border-radius:10%;
-			border:2px solid #000;
+			border:1px solid #000;
 			margin:auto;
 			color:#fff;
 			line-height:50px;
 			text-align:center
         }
+
+        .energypot {
+			background-color: #2ecc71;
+			display:block;
+			height:8px;
+			width:8px;
+			border-radius:10%;
+			border:1px solid #000;
+			margin:auto;
+			color:#fff;
+			line-height:50px;
+			text-align:center
+        }
+
+        .gold {
+			background-color:yellow;
+			display:block;
+			height:8px;
+			width:8px;
+			border-radius:10%;
+			border:1px solid #000;
+			margin:auto;
+			color:#fff;
+			line-height:50px;
+			text-align:center
+        }
+
     </style>
 </head>
 
 <body class="d-flex flex-column h-100">
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="#">
-		<img src="UNIPI_(logo).png" alt="" width="30"  class="d-inline-block align-text-top">
-		Intelligent Agents in a city
-		</a>
-		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-		<div class="navbar-nav">
-			<a class="nav-link active" aria-current="page" href="#">Home</a>
-			<a class="nav-link" href="#">About</a>
-		</div>
-    </div>
-	</div>
-	</nav>
+
 
 	
+	<main class="flex-shrink-0">
+
+
+
+	  
 	<div class="container">
 
 		<div class="row">
@@ -82,45 +97,57 @@
 
 		  <div class="col">
 
-			
+				<div class="row">
+					<!-- card -->
+					<div class="card">
+						<div class="card-img-top">
+							<img src="logo1.png" class="img-fluid mx-auto d-block" alt="card image 3">
+						</div>
+						<div class="card-block d-flex flex-column">
+							<p class="text-justify" id="iteration"> Iteration:<p></p>
 
-				<!-- card -->
-				<div class="card">
-					<div class="card-img-top">
-						<img src="logo1.png" class="img-fluid mx-auto d-block" alt="card image 3">
-					</div>
-					<div class="card-block d-flex flex-column">
-						<p class="text-justify" id="iteration"> Iteration:<p></p>
-						<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()">Initialize simulation</button>
+							<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()"><i class="bi bi-dice-5-fill"></i> Initialize simulation</button>
 
-						<button type="button" class="btn btn-dark m-1" onclick="startSimulation()">Start Simulation</button>
-						
-						<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()">Pause Simulation</button>
+							<button type="button" class="btn btn-dark m-1" onclick="startSimulation()"><i class="bi bi-caret-right-square"></i> Start Simulation</button>
+							
+							<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
+
+							<button type="button" class="btn btn-dark m-1" onclick="window.location.href='https://www.google.com/search?q=javascript+dfs';"><i class="bi bi-code-slash"></i> Source code</button>
+
+						</div>
 					</div>
+					<!-- card -->
 				</div>
-				<!-- card -->
+
+				<div class="row">
+					<!-- card -->
+					<div class="card">
+						<div class="card-block d-flex flex-column">
+							<table class="table" id="monitor">
+								<thead>
+								  <tr>
+									<th scope="col">Agent</th>
+									<th scope="col">Energy Pots</th>
+									<th scope="col">Gold</th>
+									<th scope="col">Energy</th>
+								  </tr>
+								</thead>
+								<tbody>
+
+								</tbody>
+							  </table>
+						</div>
+					</div>
+					<!-- card -->
+				</div>
 	
 			
 
 		  </div>
 
-		  <!-- <div class="col text-center">
 
-			<div class="row"><p id="iteration"> Iteration:<p></p></div>
-			<div class="row">
-				<div class="form-outline" style="width: 22rem;">
-				<input min="10" max="20" type="number" id="typeNumber" class="form-control" />
-				<label class="form-label" for="typeNumber">Number input</label>
-			</div>
+		  
 
-			<div class="row"><button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()">Initialize simulation</button></div>
-
-			<div class="row"><button type="button" class="btn btn-dark m-1" onclick="startSimulation()">Start Simulation</button></div>
-			
-			<div class="row"><button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()">Pause Simulation</button></div>
-		  </div>
-
-		</div> -->
 	</div>
 
 
@@ -131,24 +158,39 @@
 
 
     <script>
-        // Parameters
+        // Global Parameters
+
+		// Map size
         var numRows = 80; 			// Number of rows in the grid
         var numCols = 80; 			// Number of columns in the grid
 		
+		// Map entities
+        var numAgents = 10; 		// Number of agents
+		var numGoals = 5; 			// Number of goals
+		var numWalls = 730;			// Number of walls
+		var numEnergyPots = 100;	// Number of energy pots
+		var numGold = 45;			// Number of gold tokens
 		
-        var numAgents = 4; 		// Number of agents
-		var numWalls = 230;			// Number of walls
+		var agentEnergy = 35;		// Base/Max energy of an agent
+
+		// Prices
+		var energyPotPrice = 2;		// Price of Energy pot in gold
+		var mapPrice = 3;			// Price of map in gold
+
+		var energyPerPot = 10;		// Energy points given by one pot
 		
-		
+
 		
         var numIterations = 100; 	// Number of iterations
 		var currentIteration = 0;
 		
 		var grid = createGrid(numRows, numCols);
         var agents;
-		var walls;
+		var energyValues;
+		var collectedGold;
+		var collectedPots;
         
-        var endCell = { row: numRows - 1, col: numCols - 1 };
+
 		
 		var stop = false;
 
@@ -200,16 +242,15 @@
             return grid;
         }
 
-		var startCell = { row: 3, col: 3 };
 		
 		
 
 				
-		function createEntities(numRows, numCols, numAgents, numWalls) {
+		function createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold) {
 			all = [...Array(numRows*numCols).keys()];
 			all =  shuffle(all); 
 			
-			entities = all.slice(0,numAgents + numWalls);
+			entities = all.slice(0,numAgents + numGoals + numWalls + numEnergyPots + numGold);
 			
 			k = 0;
 			
@@ -222,14 +263,33 @@
 				k = k + 1;
             }
 			
+			for (var i = 0; i < numGoals; i++) {
+				var y = Math.floor(entities[k]/numCols);
+				var x = entities[k] - (y*numCols);
+                grid[x][y] = i;
+				k = k + 1;
+            }
+
 			for (var i = 0; i < numWalls; i++) {
 				var y = Math.floor(entities[k]/numCols);
 				var x = entities[k] - (y*numCols);
-                walls.push({ row: x, col: y });
+                grid[x][y] = -1;
 				k = k + 1;
             }
 			
+			for (var i = 0; i < numEnergyPots; i++) {
+				var y = Math.floor(entities[k]/numCols);
+				var x = entities[k] - (y*numCols);
+                grid[x][y] = -2;
+				k = k + 1;
+            }
 			
+			for (var i = 0; i < numGold; i++) {
+				var y = Math.floor(entities[k]/numCols);
+				var x = entities[k] - (y*numCols);
+                grid[x][y] = -3;
+				k = k + 1;
+            }
 		}
 
 
@@ -249,10 +309,29 @@
 					var obj = { row: i, col: j };
 					//console.log(obj)
 					
-					if (containsObject(obj,walls)) {
-                        cell.className = "wall";												
-                    } else if (grid[i][j] === 1) {
-                        cell.className = "path";
+					if (grid[i][j] === -3) {
+						
+						cell.className = "empty";
+
+						var element = document.createElement("div");
+                		element.className = "gold";
+						cell.appendChild(element);
+
+						
+
+                    } else if (grid[i][j] === -2) {
+
+						cell.className = "empty";
+
+						var element = document.createElement("div");
+                		element.className = "energypot";
+						cell.appendChild(element);
+
+						
+					} else if (grid[i][j] === -1) {
+                        cell.className = "wall";
+					} else if (grid[i][j] > 0) {
+                        cell.className = "goal";
                     } else {
 						cell.className = "empty";
 					}
@@ -288,23 +367,25 @@
 			var topNeighbor = { row: cell.row - 1, col: cell.col };
 			var bottomNeighor = { row: cell.row + 1, col: cell.col };
 
+			
+
             // check left neighbor
-            if (cell.col > 0 && !containsObject(leftNeighbor,walls) && !containsObject(leftNeighbor,agents)) {
+            if (cell.col > 0 && grid[cell.row][cell.col-1]!=-1 && !containsObject(leftNeighbor,agents)) {
                 neighbors.push(leftNeighbor);
             }
 
             // check right neighbor
-            if (cell.col < numCols - 1 && !containsObject(rightNeighbor,walls) && !containsObject(rightNeighbor,agents)) {
+            if (cell.col < numCols - 1 && grid[cell.row][cell.col+1]!=-1 && !containsObject(rightNeighbor,agents)) {
                 neighbors.push(rightNeighbor);
             }
 
             // check top neighbor
-            if (cell.row > 0 && !containsObject(topNeighbor,walls) && !containsObject(topNeighbor,agents)) {
+            if (cell.row > 0 && grid[cell.row-1][cell.col]!=-1 && !containsObject(topNeighbor,agents)) {
                 neighbors.push(topNeighbor);
             }
 
             // check bottom neighbor
-            if (cell.row < numRows - 1 && !containsObject(bottomNeighor,walls) && !containsObject(bottomNeighor,agents)) {
+            if (cell.row < numRows - 1 && grid[cell.row+1][cell.col]!=-1 && !containsObject(bottomNeighor,agents)) {
                 neighbors.push(bottomNeighor);
             }
 
@@ -317,8 +398,22 @@
         function getNextCell(cell) {
             var neighbors = getNeighbors(cell);
 
+
+
             return neighbors[getRndInteger(0, neighbors.length - 1)];
         }
+
+		function checkEnd() {
+			var sum = 0;
+			for (var i = 0; i < numAgents; i++) {
+				sum += energyValues[i];
+			}
+
+			if(sum==0)
+				return true;
+			
+			return false;
+		}
 		
 
 		
@@ -329,23 +424,55 @@
 
 			// Move each agent
 			for (var i = 0; i < numAgents; i++) {
+
+				if(energyValues[i]==0)
+					continue;
+
+				// if agent has energy pots
+				if(collectedPots[i]>0){
+					// if agent's lost energy greater than energyPerPot, consume a pot
+					if(agentEnergy - energyValues[i] >= energyPerPot){
+						collectedPots[i] -= 1;
+						energyValues[i] += energyPerPot;
+					}
+				}
+				
+
 				var currentCell = agents[i];
 				var nextCell = getNextCell(currentCell);
 				agents[i] = nextCell;
-				grid[currentCell.row][currentCell.col] = 1;
-				grid[nextCell.row][nextCell.col] = 1;
+
+				energyValues[i] -= 1;
+
+				if(grid[nextCell.row][nextCell.col] == -3){
+					console.log(`Agent ${i} collected gold`);
+					grid[nextCell.row][nextCell.col] = 0;
+					collectedGold[i] += 1;
+				}
+
+				if(grid[nextCell.row][nextCell.col] == -2){
+					console.log(`Agent ${i} collected energy Pot`);
+					grid[nextCell.row][nextCell.col] = 0;
+					collectedPots[i] += 1;
+				}
+
+				//grid[currentCell.row][currentCell.col] = 1;
+				//grid[nextCell.row][nextCell.col] = 1;
 				
 			}
+
+			updateMonitor();
 
 			updateGrid();
 			// itetation limit
 			currentIteration= currentIteration + 1;
-			if(currentIteration<=numIterations)
+
+			if(!checkEnd())
 				setTimeout(update, 100);
         }	
 		
 
-		initializeSimulation();
+		
 		
 		function startSimulation(){
 		
@@ -370,24 +497,65 @@
 		    grid = createGrid(numRows, numCols);
 
 			agents = [];
-			walls = [];
-			createEntities(numRows, numCols, numAgents, numWalls);
-			updateGrid()
-		
+			energyValues = new Array(numAgents).fill(agentEnergy);;
+			collectedGold = new Array(numAgents).fill(0);;
+			collectedPots = new Array(numAgents).fill(0);;
+
+			createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
+			updateGrid();
+
+
+
+
+			var table = document.getElementById("monitor")
+
+			table.innerHTML="";
+
+			var row = table.insertRow(-1);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			cell1.innerHTML = "Agent";
+			cell2.innerHTML = "Energy Pots";
+			cell3.innerHTML = "Gold";
+			cell4.innerHTML = "Energy";
+
+			for(var i=0; i<agents.length; i++){
+				var row = table.insertRow(-1);
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				var cell3 = row.insertCell(2);
+				var cell4 = row.insertCell(3);
+				cell1.innerHTML = i;
+				cell2.innerHTML = "0";
+				cell3.innerHTML = "0";
+				cell4.innerHTML = agentEnergy;
+			}	
+		}
+
+		function updateMonitor(){
+			var table = document.getElementById("monitor")
+
+			for(var i=0; i<agents.length; i++){
+				table.rows[i+1].cells[1].innerHTML = collectedPots[i];
+				table.rows[i+1].cells[2].innerHTML = collectedGold[i];
+
+				if(energyValues[i]==0)
+					table.rows[i+1].cells[3].innerHTML = "0 ☠️";
+				else
+					table.rows[i+1].cells[3].innerHTML = energyValues[i];
+			}	
 		}
 		
-		
+		// on load:
+		initializeSimulation();
     </script>
 
 	
 
 
-<footer class="footer mt-auto py-3 bg-body-tertiary">
-	<div class="container">
-	  <span class="text-body-secondary">Place sticky footer content here.</span>
-	</div>
-  </footer>
-
+</main>
 
 
   <script src="bootstrap-5.3.0-dist/js/bootstrap.min.js"></script>
