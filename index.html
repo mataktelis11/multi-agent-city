@@ -84,14 +84,24 @@
 	<main class="flex-shrink-0">
 
 
-
+	<!--Boostrap grid system https://www.w3schools.com/bootstrap/bootstrap_grid_system.asp -->
 	  
 	<div class="container">
 
 		<div class="row">
 
-		  <div class="col-auto">
-			<table id="grid"></table>
+		  <div class="col-lg-8">
+
+
+				<table id="grid"></table>
+
+				<br>
+
+				<table id="monitorTable"></table>
+				  
+
+
+
 		  </div>
 
 
@@ -112,7 +122,7 @@
 							
 							<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
 
-							<button type="button" class="btn btn-dark m-1" onclick="window.location.href='https://www.google.com/search?q=javascript+dfs';"><i class="bi bi-code-slash"></i> Source code</button>
+							<button type="button" class="btn btn-dark m-1" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-code-slash"></i> Source code</button>
 
 						</div>
 					</div>
@@ -161,23 +171,23 @@
         // Global Parameters
 
 		// Map size
-        var numRows = 10; 			// Number of rows in the grid 80
-        var numCols = 10; 			// Number of columns in the grid 80
+        var numRows = 30; 			// Number of rows in the grid 80
+        var numCols = 30; 			// Number of columns in the grid 80
 		
 		// Map entities
-        var numAgents = 3; 		// Number of agents 10
+        var numAgents = 6; 		// Number of agents 10
 		var numGoals = 3; 			// Number of goals 5
-		var numWalls = 10;			// Number of walls 730
-		var numEnergyPots = 2;	// Number of energy pots 100
+		var numWalls = 100;			// Number of walls 730
+		var numEnergyPots = 40;	// Number of energy pots 100
 		var numGold = 2;			// Number of gold tokens 45
 		
-		var agentEnergy = 1235;		// Base/Max energy of an agent 35
+		var agentEnergy = 120;		// Base/Max energy of an agent 35
 
 		// Prices
 		var energyPotPrice = 2;		// Price of Energy pot in gold
 		var mapPrice = 3;			// Price of map in gold
 
-		var energyPerPot = 10;		// Energy points given by one pot
+		var energyPerPot = 40;		// Energy points given by one pot
 		
 
 		var agent_memory;
@@ -368,6 +378,34 @@
 			par.innerHTML = "Iteration: " + currentIteration + "/" + numIterations;
         }
 
+		
+		function updateGridMonitor(index) {
+            var table = document.getElementById("monitorTable");
+            table.innerHTML = "";
+
+			var curr_mem = agent_memory[index];
+
+            for (var i = 0; i < numRows; i++) {
+                var row = document.createElement("tr");
+                for (var j = 0; j < numCols; j++) {
+                    var cell = document.createElement("td");
+					
+					var obj = { row: i, col: j };
+					//console.log(obj)
+					
+					if (curr_mem[i][j] === true) {
+						cell.className = "goal";
+                    } else {
+						cell.className = "empty";
+					}
+
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+
+		}
+
         // get neighboring cells
         function getNeighbors(cell) {
 		
@@ -433,6 +471,42 @@
 		}
 
 
+		function make_a_move2(i){
+
+			
+			var curr_mem = agent_memory[i];
+			curr_mem[agents[i].row][agents[i].col] = true;
+
+			var neighbors = getNeighbors(agents[i]);
+
+			for(var k=0; k<neighbors.length; k++){
+				curr_mem[neighbors[k].row][neighbors[k].col] = true;
+			}
+
+			for(var k=0; k<neighbors.length; k++){
+				var neighborsDeep = getNeighbors(neighbors[k]);
+
+				if(neighborsDeep.length==0){
+					console.log("EMPTY DEEP search")
+					continue;
+				}
+					
+
+				for(var j=0; j<neighborsDeep.length; j++){
+					if(curr_mem[neighborsDeep[j].row][neighborsDeep[j].col] == false)
+						return neighborsDeep[j];
+				}
+
+				
+			}
+
+			if(neighbors.length==0){
+					console.log("EMPTY SEARCH") // THIS BREAKS THE PROGRAM
+				}
+
+			return neighbors[getRndInteger(0, neighbors.length - 1)];
+		}
+
 		function checkEnd() {
 			var sum = 0;
 			for (var i = 0; i < numAgents; i++) {
@@ -470,7 +544,7 @@
 
 				var currentCell = agents[i];
 				//var nextCell = getNextCell(currentCell);
-				var nextCell = make_a_move(i);
+				var nextCell = make_a_move2(i);
 				agents[i] = nextCell;
 
 				energyValues[i] -= 1;
@@ -495,11 +569,12 @@
 			updateMonitor();
 
 			updateGrid();
+			updateGridMonitor(0);
 			// itetation limit
 			currentIteration= currentIteration + 1;
 
 			if(!checkEnd())
-				setTimeout(update, 100);
+				setTimeout(update, 10);
         }	
 		
 
