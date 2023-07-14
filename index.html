@@ -31,6 +31,9 @@
         .path {
             background-color: #95a5a6;
         }
+		.visited {
+			background-color: #52be80;
+		}
         .wall {
             background-color: brown;
         }		
@@ -475,15 +478,30 @@
 					//console.log(obj)
 					
 					if (curr_mem[i][j] === true) {
-						cell.className = "goal";
+						cell.className = "visited";
+						if(grid[i][j]==-1){
+							cell.className = "wall";
+						}else if(grid[i][j]>0){
+							cell.className = "goal";
+						}
                     } else {
 						cell.className = "empty";
 					}
+
+
 
                     row.appendChild(cell);
                 }
                 table.appendChild(row);
             }
+
+			// draw agent
+			var agentCell = agents[index];
+
+			var agentTd = table.rows[agentCell.row].cells[agentCell.col];
+			var agentElement = document.createElement("div");
+			agentElement.className = "agent";
+			agentTd.appendChild(agentElement);
 
 		}
 
@@ -677,7 +695,7 @@
 					
 
 				for(var j=0; j<neighborsDeep.length; j++){
-					if(curr_mem[neighborsDeep[j].row][neighborsDeep[j].col] == false && grid[x][y]!=-2)
+					if(curr_mem[neighborsDeep[j].row][neighborsDeep[j].col] == false && grid[x][y]==0 && !containsObject(neighborsDeep[j],agents))
 						return neighbors[k];
 				}
 			}		
