@@ -29,6 +29,9 @@ var collectedGold;
 var collectedPots;
 var goalsFound;
 var paths;
+var pathIndex;
+
+var agentDone;
 
 var goals;
 
@@ -573,6 +576,10 @@ function bfs(start,end,agent){
 
 
 function checkEnd() {
+
+    if(agentDone)
+        return true;
+
     var sum = 0;
     for (var i = 0; i < numAgents; i++) {
         sum += energyValues[i];
@@ -607,17 +614,14 @@ function update() {
                 paths[i] = paths[i].concat(path);
             }
 
-            var endpath = bfs(goals[0],agentStartingPositions[i],i);
+            var endpath = bfs(goals[numGoals-1],agentStartingPositions[i],i);
             paths[i] = paths[i].concat(endpath);
 
             //continue;
+
+            alert(`Agent ${i} found all goals`)
         }
 
-        if(goalsFound[i] == numGoals){
-            console.log("done")
-            pauseSimulation();
-            continue;
-        }
 
 
 
@@ -633,7 +637,23 @@ function update() {
 
         var currentCell = agents[i];
         //var nextCell = getNextCell(currentCell);
-        var nextCell = make_a_move3(i);
+
+        var nextCell;
+
+        if(goalsFound[i] == numGoals){
+
+            if(pathIndex[i]==paths[i].length){
+                agentDone = true;
+                continue;
+            }
+
+            
+            pathIndex[i] += 1;
+            nextCell = paths[i][pathIndex[i]-1];
+        } else{
+            nextCell = make_a_move3(i);
+        }
+  
         agents[i] = nextCell;
 
         energyValues[i] -= 1;
@@ -700,6 +720,9 @@ function initializeSimulation() {
 
     goalsFound = new Array(numAgents).fill(0);
     paths = new Array(numAgents).fill([]);
+    pathIndex = new Array(numAgents).fill(0);
+
+    agentDone = false;
 
     createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
     updateGrid();
