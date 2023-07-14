@@ -768,6 +768,8 @@ function initializeSimulation() {
     }	
 
 
+    updateGridMonitor(monitorAgent);
+
     // <li><a class="dropdown-item">0</a></li>
     // 		  <li><a class="dropdown-item">1</a></li>
     // 		  <li><a class="dropdown-item">2</a></li>
