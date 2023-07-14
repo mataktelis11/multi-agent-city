@@ -238,7 +238,7 @@ function updateGridMonitor(index) {
                 cell.className = "empty";
             }
 
-            cell.innerText = bfsGrid[i][j];
+            //cell.innerText = bfsGrid[i][j];
 
 
             row.appendChild(cell);
@@ -253,6 +253,8 @@ function updateGridMonitor(index) {
     var agentElement = document.createElement("div");
     agentElement.className = "agent";
     agentTd.appendChild(agentElement);
+
+    table.rows[agentStartingPositions[index].row].cells[agentStartingPositions[index].col].className = "start"
 
 }
 
@@ -538,7 +540,7 @@ function bfs(start,end,agent){
     return path;
 }
 
-
+///////////////////////////////////////////////////////////////
 
 
 
@@ -658,6 +660,11 @@ function initializeSimulation() {
         agent_memory.push(createGridMEM(numRows, numCols));
     }
 
+    agentStartingPositions = [];
+
+    for(var i=0; i<agents.length; i++){
+        agentStartingPositions.push(agents[i])
+    }
 
 
 
