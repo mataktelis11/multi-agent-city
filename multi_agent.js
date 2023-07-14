@@ -7,34 +7,36 @@ var numRows = 30; 			// Number of rows in the grid 80
 var numCols = 30; 			// Number of columns in the grid 80
 
 // Map entities
-var numAgents = 6; 		// Number of agents 10
+var numAgents = 6; 		    // Number of agents 10
 var numGoals = 3; 			// Number of goals 5
 var numWalls = 100;			// Number of walls 730
-var numEnergyPots = 40;	// Number of energy pots 100
+var numEnergyPots = 40;	    // Number of energy pots 100
 var numGold = 2;			// Number of gold tokens 45
 
 var agentEnergy = 120;		// Base/Max energy of an agent 35
 
-// Prices
+// Prices and Energy
 var energyPotPrice = 2;		// Price of Energy pot in gold
 var mapPrice = 3;			// Price of map in gold
-
 var energyPerPot = 40;		// Energy points given by one pot
 
-
-var agent_memory;
-
-var monitorAgent = 0;
-
-var currentIteration = 0;
-
-var grid = createGrid(numRows, numCols);
+// agent fields
 var agents;
+var agentStartingPositions;
+var agent_memory;
 var energyValues;
 var collectedGold;
 var collectedPots;
 
+// main map grid
+var grid = createGrid(numRows, numCols);
+
+var bfsGrid = createGrid(numRows, numCols);
+
+// UI variables
 var stop = false;
+var monitorAgent = 0;
+var currentIteration = 0;
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -236,6 +238,7 @@ function updateGridMonitor(index) {
                 cell.className = "empty";
             }
 
+            cell.innerText = bfsGrid[i][j];
 
 
             row.appendChild(cell);
@@ -449,8 +452,102 @@ function make_a_move3(i){
     }		
 
     return possibleChoices[getRndInteger(0, possibleChoices.length - 1)];
-
 }
+
+
+////// BFS : source -> https://levelup.gitconnected.com/solve-a-maze-with-python-e9f0580979a1 ////
+
+function make_step(k,agent) {
+
+    var curr_mem = agent_memory[agent];
+
+    for (var i = 0; i < numRows; i++) {
+
+        for (var j = 0; j < numCols; j++) {
+            if(bfsGrid[i][j]==k){
+
+                if(i>0 && bfsGrid[i-1][j]==0 && curr_mem[i-1][j]==true && grid[i-1][j]!=-1){
+                    bfsGrid[i-1][j]=k+1;
+                }
+
+                if(j>0 && bfsGrid[i][j-1]==0 && curr_mem[i][j-1]==true && grid[i][j-1]!=-1){
+                    bfsGrid[i][j-1]=k+1;
+                }
+
+                if(i<numRows-1 && bfsGrid[i+1][j]==0 && curr_mem[i+1][j]==true && grid[i+1][j]!=-1){
+                    bfsGrid[i+1][j]=k+1;
+                }
+
+                if(j<numCols-1 && bfsGrid[i][j+1]==0 && curr_mem[i][j+1]==true && grid[i][j+1]!=-1){
+                    bfsGrid[i][j+1]=k+1;
+                }
+            }
+        }
+    }
+}
+
+
+
+function bfs(start,end,agent){
+    // run bfs
+    step = 0;
+    bfsGrid = createGrid(numRows, numCols);
+    bfsGrid[start.row][start.col] = 1;
+
+    while(bfsGrid[end.row][end.col] == 0){
+        step += 1;
+        make_step(step,agent);
+
+    }
+
+    // construct the path
+    path = [];
+    path.push(end);
+    reverse_step = bfsGrid[end.row][end.col];
+
+    var i = end.row;
+    var j = end.col;
+
+    while(reverse_step>1){
+
+        if(i>0 && bfsGrid[i-1][j]==0){
+            i = i - 1;
+            path.push({row:i, col:j})
+            reverse_step -= 1;
+        }
+
+        if(j>0 && bfsGrid[i][j-1]==0){
+            j = j - 1;
+            path.push({row:i, col:j})
+            reverse_step -= 1;
+        }
+
+        if(i<numRows-1 && bfsGrid[i+1][j]==0){
+            i = i + 1;
+            path.push({row:i, col:j})
+            reverse_step -= 1;
+        }
+
+        if(j<numCols-1 && bfsGrid[i][j+1]==0){
+            j = j + 1;
+            path.push({row:i, col:j})
+            reverse_step -= 1;
+        }
+    }
+
+    return path;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 function checkEnd() {
     var sum = 0;
