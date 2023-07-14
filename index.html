@@ -101,98 +101,108 @@
 
 		<div class="row">
 
+
+
 		  <div class="col-lg-9">
 
-				Mulit agent grid
+			Main Controls:
+			<div class="btn-group" role="group" aria-label="Basic outlined example">
+				<button type="button" class="btn btn-outline-secondary" onclick="startSimulation()"><i class="bi bi-caret-right-square"></i> Start Simulation</button>
+				<button type="button" class="btn btn-outline-secondary" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
+				<button type="button" class="btn btn-outline-secondary"><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
+			</div>
 
-				<ul>
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="wall"></td></tr>
-						</table> 
-						Wall
-					</li>
+			<br>
+			Mulit agent grid:
 
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="goal"></td></tr>
-						</table> 
-						Goal
-					</li>
+			<ul>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="wall"></td></tr>
+					</table> 
+					Wall
+				</li>
 
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="agent"></td></tr>
-						</table> 
-						Agent
-					</li>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="goal"></td></tr>
+					</table> 
+					Goal
+				</li>
 
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="gold"></td></tr>
-						</table> 
-						Gold
-					</li>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="agent"></td></tr>
+					</table> 
+					Agent
+				</li>
 
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="energypot"></td></tr>
-						</table> 
-						Energy Pot
-					</li>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="gold"></td></tr>
+					</table> 
+					Gold
+				</li>
 
-				</ul>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="energypot"></td></tr>
+					</table> 
+					Energy Pot
+				</li>
 
-				<table id="grid"></table>
+			</ul>
 
-				<br>
+			<table id="grid"></table>
 
-				Showing Memory of agent:
-				<div class="dropdown">
-					<button id="monitorUIbutton" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					  0
-					</button>
-					<ul id="monitorUIlist" class="dropdown-menu">
+			<br>
 
-					</ul>
-				</div>
-
-				<ul>
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="wall"></td></tr>
-						</table> 
-						Wall
-					</li>
-
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="goal"></td></tr>
-						</table> 
-						Goal
-					</li>
-
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="agent"></td></tr>
-						</table> 
-						Agent
-					</li>
-
-					<li> 
-						<table style="display:inline-table">
-							<tr><td class="start"></td></tr>
-						</table> 
-						Agent Starting Position
-					</li>
+			Showing Memory of agent:
+			<div class="dropdown">
+				<button id="monitorUIbutton" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					0
+				</button>
+				<ul id="monitorUIlist" class="dropdown-menu">
 
 				</ul>
+			</div>
 
-				<table id="monitorTable"></table>
+			<ul>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="wall"></td></tr>
+					</table> 
+					Wall
+				</li>
 
-				<br>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="goal"></td></tr>
+					</table> 
+					Goal
+				</li>
 
-				<br>
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="agent"></td></tr>
+					</table> 
+					Agent
+				</li>
+
+				<li> 
+					<table style="display:inline-table">
+						<tr><td class="start"></td></tr>
+					</table> 
+					Agent Starting Position
+				</li>
+
+			</ul>
+
+			<table id="monitorTable"></table>
+
+			<br>
+
+			<br>
 				  
 
 
@@ -209,7 +219,11 @@
 							<img src="logo1.png" class="img-fluid mx-auto d-block" alt="card image 3">
 						</div>
 						<div class="card-block d-flex flex-column">
-							<p class="text-justify" id="iteration"> Iteration:<p></p>
+
+							<div class="btn-group" role="group" aria-label="Basic outlined example">
+								<button type="button" class="btn btn-outline-secondary" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-info-square"></i> Read me</button>
+								<button type="button" class="btn btn-outline-secondary" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-code-slash"></i> Source code</button>
+							</div>
 
 							<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()"><i class="bi bi-dice-5-fill"></i> Initialize simulation</button>
 
@@ -217,10 +231,39 @@
 							
 							<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
 
+							<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()"><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
+
 							<button type="button" class="btn btn-dark m-1" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-info-square"></i> Read me</button>
 
 							<button type="button" class="btn btn-dark m-1" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-code-slash"></i> Source code</button>
 
+						</div>
+					</div>
+					<!-- card -->
+				</div>
+
+				<div class="row">
+					<!-- card -->
+					<div class="card">
+						<div class="card-block d-flex flex-column">
+							<p class="text-justify" id="iteration"> Iteration:</p>
+
+							<div class="form-outline">
+								<input type="number" id="typeNumber1" class="form-control m-1" placeholder="Grid Dimentions"/>
+		
+								<input type="number" id="typeNumber2" class="form-control m-1" placeholder="Number of Agents"/>
+
+								<input type="number" id="typeNumber3" class="form-control m-1" placeholder="Number of Goals"/>
+
+								<input type="number" id="typeNumber4" class="form-control m-1" placeholder="Number of Energy Pots"/>
+
+								<input type="number" id="typeNumber4" class="form-control m-1" placeholder="Number of Energy Pots"/>
+
+							</div>
+
+							<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()"><i class="bi bi-dice-5-fill"></i> Initialize Random simulation</button>
+
+							<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()"><i class="bi bi-file-check"></i> Initialize Default simulation</button>
 						</div>
 					</div>
 					<!-- card -->
