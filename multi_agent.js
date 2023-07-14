@@ -8,8 +8,8 @@ var numCols = 30; 			// Number of columns in the grid 80
 
 // Map entities
 var numAgents = 6; 		    // Number of agents 10
-var numGoals = 3; 			// Number of goals 5
-var numWalls = 100;			// Number of walls 730
+var numGoals = 2; 			// Number of goals 5
+var numWalls = 70;			// Number of walls 730
 var numEnergyPots = 40;	    // Number of energy pots 100
 var numGold = 2;			// Number of gold tokens 45
 
@@ -27,6 +27,10 @@ var agent_memory;
 var energyValues;
 var collectedGold;
 var collectedPots;
+var goalsFound;
+var paths;
+
+var goals;
 
 // main map grid
 var grid = createGrid(numRows, numCols);
@@ -115,14 +119,14 @@ function createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEner
         var y = Math.floor(entities[k]/numCols);
         var x = entities[k] - (y*numCols);
         agents.push({ row: x, col: y });
-        
         k = k + 1;
     }
     
     for (var i = 0; i < numGoals; i++) {
         var y = Math.floor(entities[k]/numCols);
         var x = entities[k] - (y*numCols);
-        grid[x][y] = i;
+        grid[x][y] = i+1;
+        goals.push({ row: x, col: y });
         k = k + 1;
     }
 
@@ -253,6 +257,21 @@ function updateGridMonitor(index) {
     var agentElement = document.createElement("div");
     agentElement.className = "agent";
     agentTd.appendChild(agentElement);
+
+
+    if(goalsFound[index] == numGoals){
+
+
+        for(var k=0; k<paths[index].length; k++){
+            var step = paths[index][k];
+
+            table.rows[step.row].cells[step.col].className = "path";
+        }
+
+    }
+
+
+
 
     table.rows[agentStartingPositions[index].row].cells[agentStartingPositions[index].col].className = "start"
 
@@ -412,15 +431,21 @@ function make_a_move3(i){
         var x = neighbors[k].row;
         var y = neighbors[k].col;
 
-        curr_mem[x][y] = true;
-
+        
         if(grid[x][y]>0){
             // found a goal
+            if(curr_mem[x][y] != true){
+                console.log(`Agent ${i} found a goal`)
+                goalsFound[i] += 1;
+            }
         }
 
         if(containsObject(neighbors[k],agents)){
             // found an agent
         }	
+
+        curr_mem[x][y] = true;
+
 
         if(grid[x][y]==0 && !containsObject(neighbors[k],agents)){
             possibleChoices.push(neighbors[k]);
@@ -512,32 +537,28 @@ function bfs(start,end,agent){
 
     while(reverse_step>1){
 
-        if(i>0 && bfsGrid[i-1][j]==0){
+        if(i>0 && bfsGrid[i-1][j]==reverse_step-1){
             i = i - 1;
             path.push({row:i, col:j})
             reverse_step -= 1;
-        }
-
-        if(j>0 && bfsGrid[i][j-1]==0){
+        } else if(j>0 && bfsGrid[i][j-1]==reverse_step-1){
             j = j - 1;
             path.push({row:i, col:j})
             reverse_step -= 1;
-        }
-
-        if(i<numRows-1 && bfsGrid[i+1][j]==0){
+        }else if(i<numRows-1 && bfsGrid[i+1][j]==reverse_step-1){
             i = i + 1;
             path.push({row:i, col:j})
             reverse_step -= 1;
-        }
-
-        if(j<numCols-1 && bfsGrid[i][j+1]==0){
+        } else if(j<numCols-1 && bfsGrid[i][j+1]==reverse_step-1){
             j = j + 1;
             path.push({row:i, col:j})
             reverse_step -= 1;
         }
     }
 
-    return path;
+
+
+    return path.reverse();
 }
 
 ///////////////////////////////////////////////////////////////
@@ -575,6 +596,30 @@ function update() {
 
         if(energyValues[i]==0)
             continue;
+
+        if(goalsFound[i] == numGoals && paths[i].length == 0){
+
+            var startinhpath = bfs(agents[i],goals[0],i);
+            paths[i] = paths[i].concat(startinhpath);
+
+            for(var g=0; g<numGoals-1; g++){
+                path = bfs(goals[g],goals[g+1],i);
+                paths[i] = paths[i].concat(path);
+            }
+
+            var endpath = bfs(goals[0],agentStartingPositions[i],i);
+            paths[i] = paths[i].concat(endpath);
+
+            //continue;
+        }
+
+        if(goalsFound[i] == numGoals){
+            console.log("done")
+            pauseSimulation();
+            continue;
+        }
+
+
 
         // if agent has energy pots
         if(collectedPots[i]>0){
@@ -646,10 +691,15 @@ function initializeSimulation() {
     
     grid = createGrid(numRows, numCols);
 
+    goals = [];
+
     agents = [];
     energyValues = new Array(numAgents).fill(agentEnergy);
     collectedGold = new Array(numAgents).fill(0);
     collectedPots = new Array(numAgents).fill(0);
+
+    goalsFound = new Array(numAgents).fill(0);
+    paths = new Array(numAgents).fill([]);
 
     createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
     updateGrid();
