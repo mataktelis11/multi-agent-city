@@ -31,7 +31,10 @@ var goalsFound;
 var paths;
 var pathIndex;
 
+var agentSteps;
+var agentsExecutingPlan;
 var agentDone;
+var numAgentsDone;
 
 var goals;
 
@@ -576,13 +579,14 @@ function bfs(start,end,agent){
 
 
 function checkEnd() {
-
-    if(agentDone)
-        return true;
-
     var sum = 0;
     for (var i = 0; i < numAgents; i++) {
-        sum += energyValues[i];
+
+        if(!agentDone[i])
+            sum += energyValues[i];
+
+        // if(agentDone[i])
+        //     return true;
     }
 
     if(sum==0)
@@ -619,7 +623,9 @@ function update() {
 
             //continue;
 
-            alert(`Agent ${i} found all goals`)
+            //alert(`Agent ${i} found all goals`)
+
+            agentsExecutingPlan[i] = true;
         }
 
 
@@ -634,16 +640,26 @@ function update() {
             }
         }
         
-
-        var currentCell = agents[i];
-        //var nextCell = getNextCell(currentCell);
-
         var nextCell;
 
         if(goalsFound[i] == numGoals){
 
             if(pathIndex[i]==paths[i].length){
-                agentDone = true;
+                agentDone[i] = true;
+                numAgentsDone += 1;
+
+
+                if(numAgentsDone==1){
+                    var div = document.getElementById('modalText');
+                    div.innerText = `Agent ${i} found all goals and managed to complete his plan!\nThe simulation was paused`;
+
+                    var myModal = new bootstrap.Modal(document.getElementById('completeModal'), {
+                        keyboard: false
+                    });
+                    myModal.toggle();
+                    pauseSimulation();
+                }
+                
                 continue;
             }
 
@@ -657,6 +673,7 @@ function update() {
         agents[i] = nextCell;
 
         energyValues[i] -= 1;
+        agentSteps[i] += 1;
 
         if(grid[nextCell.row][nextCell.col] == -3){
             console.log(`Agent ${i} collected gold`);
@@ -668,18 +685,15 @@ function update() {
             console.log(`Agent ${i} collected energy Pot`);
             grid[nextCell.row][nextCell.col] = 0;
             collectedPots[i] += 1;
-        }
-
-        //grid[currentCell.row][currentCell.col] = 1;
-        //grid[nextCell.row][nextCell.col] = 1;
-        
+        }        
     }
 
     updateMonitor();
+    updateMonitorTable2();
 
     updateGrid();
     updateGridMonitor(monitorAgent);
-    // itetation limit
+
     currentIteration= currentIteration + 1;
 
     if(!checkEnd())
@@ -721,8 +735,12 @@ function initializeSimulation() {
     goalsFound = new Array(numAgents).fill(0);
     paths = new Array(numAgents).fill([]);
     pathIndex = new Array(numAgents).fill(0);
+    agentSteps = new Array(numAgents).fill(0);
 
-    agentDone = false;
+    agentsExecutingPlan = new Array(numAgents).fill(false);
+
+    agentDone = new Array(numAgents).fill(false);
+    numAgentsDone = 0;
 
     createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
     updateGrid();
@@ -767,6 +785,35 @@ function initializeSimulation() {
         cell4.innerHTML = agentEnergy;
     }	
 
+    //stepMonitor
+
+    table = document.getElementById("stepMonitor")
+
+    table.innerHTML="";
+
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    cell1.innerHTML = "Agent";
+    cell2.innerHTML = "Steps";
+    cell3.innerHTML = "Trades";
+    cell4.innerHTML = "Explored";
+
+    for(var i=0; i<agents.length; i++){
+        var row = table.insertRow(-1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        cell1.innerHTML = i;
+        cell2.innerHTML = "0";
+        cell3.innerHTML = "0";
+        cell4.innerHTML = "0";
+    }
+
+
 
     updateGridMonitor(monitorAgent);
 
@@ -806,10 +853,28 @@ function updateMonitor(){
 
         if(energyValues[i]==0)
             table.rows[i+1].cells[3].innerHTML = "0 ☠️";
-        else
+        else {
             table.rows[i+1].cells[3].innerHTML = energyValues[i];
+
+            if(agentsExecutingPlan[i] && !agentDone[i])
+                table.rows[i+1].cells[3].innerHTML += " ⚙️"
+
+            if(agentDone[i])
+                table.rows[i+1].cells[3].innerHTML += " ✅"
+        }
+            
     }	
 }
+
+function updateMonitorTable2(){
+    var table = document.getElementById("stepMonitor")
+
+    for(var i=0; i<agents.length; i++){
+        table.rows[i+1].cells[1].innerHTML = agentSteps[i];
+
+    }	
+}
+
 
 // on load:
 initializeSimulation();

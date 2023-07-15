@@ -107,9 +107,9 @@
 
 			Main Controls:
 			<div class="btn-group" role="group" aria-label="Basic outlined example">
-				<button type="button" class="btn btn-outline-secondary" onclick="startSimulation()"><i class="bi bi-caret-right-square"></i> Start Simulation</button>
-				<button type="button" class="btn btn-outline-secondary" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
-				<button type="button" class="btn btn-outline-secondary"><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
+				<button type="button" class="btn btn-outline-dark" onclick="startSimulation()"><i class="bi bi-caret-right-square"></i> Start Simulation</button>
+				<button type="button" class="btn btn-outline-dark" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
+				<button type="button" class="btn btn-outline-dark"><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
 			</div>
 
 			<br>
@@ -218,8 +218,8 @@
 						<div class="card-block d-flex flex-column">
 
 							<div class="btn-group m-1" role="group" aria-label="Basic outlined example">
-								<button type="button" class="btn btn-outline-secondary" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-info-square"></i> Read me</button>
-								<button type="button" class="btn btn-outline-secondary" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-code-slash"></i> Source code</button>
+								<button type="button" class="btn btn-outline-dark" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-info-square"></i> Read me</button>
+								<button type="button" class="btn btn-outline-dark" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-code-slash"></i> Source code</button>
 							</div>
 						</div>
 					</div>
@@ -232,20 +232,40 @@
 					<!-- card -->
 					<div class="card">
 						<div class="card-block d-flex flex-column">
-							<p class="text-justify" id="iteration"> Iteration:</p>
+							
 
-							<div class="form-outline">
-								<input type="number" id="typeNumber1" class="form-control m-1" placeholder="Grid Dimentions"/>
+
+							
+								<button class="btn btn-dark m-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+									<i class="bi bi-toggles2"></i> Show/Hide Input Fields
+								</button>
+							  
+							  <div class="collapse" id="collapseExample">
+								<div class="card card-body">
+									<div class="form-outline">
+										<input type="number" id="typeNumber1" class="form-control m-1" placeholder="Grid Dimentions"/>
+				
+										<input type="number" id="typeNumber2" class="form-control m-1" placeholder="Number of Agents"/>
 		
-								<input type="number" id="typeNumber2" class="form-control m-1" placeholder="Number of Agents"/>
+										<input type="number" id="typeNumber3" class="form-control m-1" placeholder="Number of Goals"/>
+		
+										<input type="number" id="typeNumber4" class="form-control m-1" placeholder="Number of Energy Pots"/>
+		
+										<input type="number" id="typeNumber4" class="form-control m-1" placeholder="Number of Energy Pots"/>
 
-								<input type="number" id="typeNumber3" class="form-control m-1" placeholder="Number of Goals"/>
+										<input type="number" id="typeNumber5" class="form-control m-1" placeholder="Delay"/>
+		
+										<input class="form-check-input m-1" type="checkbox" value="" id="flexCheckChecked" checked>
+										<label class="form-check-label" for="flexCheckChecked">
+										  Allow trading memory
+										</label>
+		
+									</div>								  
+								</div>
+							  </div>
 
-								<input type="number" id="typeNumber4" class="form-control m-1" placeholder="Number of Energy Pots"/>
 
-								<input type="number" id="typeNumber4" class="form-control m-1" placeholder="Number of Energy Pots"/>
 
-							</div>
 
 							<button type="button" class="btn btn-dark m-1" onclick="initializeSimulation()"><i class="bi bi-dice-5-fill"></i> Initialize Random simulation</button>
 
@@ -274,9 +294,16 @@
 
 								</tbody>
 							  </table>
+							  <ul>
+								<li>Agent Executing Plan:⚙️</li>
+								<li>Agent Reached Goal:✅</li>
+								<li>Agent Dead:☠️</li>
+							  </ul>
+							  <p class="text-justify" id="iteration"> Iteration:</p>
 						</div>
-						<button type="button" class="btn btn-dark m-1" onclick='downloadCSVFile(tableToCSV("monitor"));'><i class="bi bi-box-arrow-up-right"></i> Export to CSV</button>
+						<button type="button" class="btn btn-dark m-1" onclick='downloadCSVFile(tableToCSV("monitor"));'><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
 
+						<button type="button" class="btn btn-dark m-1" onclick='downloadCSVFile(tableToCSV("monitor"));'><i class="bi bi-box-arrow-up-right"></i> Export to CSV</button>
 					</div>
 					<!-- card -->
 				</div>
@@ -287,7 +314,7 @@
 					<!-- card -->
 					<div class="card">
 						<div class="card-block d-flex flex-column">
-							<table class="table">
+							<table class="table" id="stepMonitor">
 								<thead>
 								  <tr>
 									<th scope="col">Agent</th>
@@ -301,7 +328,7 @@
 								</tbody>
 							  </table>
 						</div>
-						<button type="button" class="btn btn-dark m-1" onclick="window.location.href='https://github.com/mataktelis11/multi-agent-city';"><i class="bi bi-box-arrow-up-right"></i> Export to CSV</button>
+						<button type="button" class="btn btn-dark m-1" onclick='downloadCSVFile(tableToCSV("stepMonitor"));'><i class="bi bi-box-arrow-up-right"></i> Export to CSV</button>
 
 
 					</div>
@@ -315,6 +342,23 @@
 
 	</div>
 
+
+	<!-- Modal -->
+	<div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">An Agent has completed his plan</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="modalText">
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+		</div>
+	</div>
 
 
 </main>
