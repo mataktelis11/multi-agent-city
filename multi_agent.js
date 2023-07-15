@@ -4,7 +4,7 @@
 
 // Map size
 var numRows = 30; 			// Number of rows in the grid 80
-var numCols = 30; 			// Number of columns in the grid 80
+var numCols = 31; 			// Number of columns in the grid 80
 
 // Map entities
 var numAgents = 6; 		    // Number of agents 10
@@ -122,37 +122,37 @@ function createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEner
     
     for (var i = 0; i < numAgents; i++) {
     
-        var y = Math.floor(entities[k]/numCols);
-        var x = entities[k] - (y*numCols);
+        var y = Math.floor(entities[k]/numRows);
+        var x = entities[k] - (y*numRows);
         agents.push({ row: x, col: y });
         k = k + 1;
     }
     
     for (var i = 0; i < numGoals; i++) {
-        var y = Math.floor(entities[k]/numCols);
-        var x = entities[k] - (y*numCols);
+        var y = Math.floor(entities[k]/numRows);
+        var x = entities[k] - (y*numRows);
         grid[x][y] = i+1;
         goals.push({ row: x, col: y });
         k = k + 1;
     }
 
     for (var i = 0; i < numWalls; i++) {
-        var y = Math.floor(entities[k]/numCols);
-        var x = entities[k] - (y*numCols);
+        var y = Math.floor(entities[k]/numRows);
+        var x = entities[k] - (y*numRows);
         grid[x][y] = -1;
         k = k + 1;
     }
     
     for (var i = 0; i < numEnergyPots; i++) {
-        var y = Math.floor(entities[k]/numCols);
-        var x = entities[k] - (y*numCols);
+        var y = Math.floor(entities[k]/numRows);
+        var x = entities[k] - (y*numRows);
         grid[x][y] = -2;
         k = k + 1;
     }
     
     for (var i = 0; i < numGold; i++) {
-        var y = Math.floor(entities[k]/numCols);
-        var x = entities[k] - (y*numCols);
+        var y = Math.floor(entities[k]/numRows);
+        var x = entities[k] - (y*numRows);
         grid[x][y] = -3;
         k = k + 1;
     }
