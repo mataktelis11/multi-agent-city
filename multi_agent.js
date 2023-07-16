@@ -30,6 +30,7 @@ var collectedPots;
 var goalsFound;
 var paths;
 var pathIndex;
+var agentInitialPos;
 
 var agentSteps;
 var agentsExecutingPlan;
@@ -292,6 +293,11 @@ function updateGridMonitor(index) {
             var goal = goals[k];
             table.rows[goal.row].cells[goal.col].className = "goal";
         }
+
+
+        //agentInitialPos[i]
+
+        table.rows[agentInitialPos[index].row].cells[agentInitialPos[index].col].className = "initial"
 
     }
 
@@ -696,6 +702,8 @@ function update() {
 
             //alert(`Agent ${i} found all goals`)
             agentsExecutingPlan[i] = true;
+
+            agentInitialPos[i] = agents[i];
         }
 
 
@@ -811,6 +819,7 @@ function initializeSimulation() {
 
     agentDone = new Array(numAgents).fill(false);
     numAgentsDone = 0;
+    agentInitialPos = new Array(numAgents).fill({row:0,col:0});
 
     trade = document.getElementById("flexCheckChecked").checked;
 
