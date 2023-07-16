@@ -1,5 +1,5 @@
 # Multi agent city traversal
-
+A simple simulation of agents traveling in a 2d grid. The simulation runs on a static html page using Javascript.
 ## Introduction
 
 In this website we run a simulation of agents doing tasks in a city. The city is a 2d grid and contains obstacles and goals. Each agent needs to visit all the goals in the grid in order and then go back to its starting position. It's important to note that the agents don't know the layout of the map initial, so they have to fist explore it to find where the goals are.
@@ -10,7 +10,7 @@ Each agent has a limited amount of energy, and it's decreased by one each time i
 
 Also there is gold on the ground which can be collected by the agents and used.
 
-## Instructions
+## Details
 
 To run the simulation simply click "load default map" on the right and then click "start simulation" on the top.
 
@@ -43,8 +43,8 @@ Each of the tables on the right can also be exported to a csv file.
 
 ## Disclaimer
 
-This project was made for a university project in a relatively short period of time, so please don't take it too seriously. The code is obviously not optimized and ok I'm sure you will find errors.
+- This project was made for a university project in a relatively short period of time, so please don't take it too seriously. The code is obviously not optimized and I'm sure you will find errors.
 
-Any external sources used are directly referenced in the code with URLs. Huge shout out to all those people on the internet who provided these code snippets.
+- Any external sources used are directly referenced in the code with URLs. Huge shout out to all those people on the internet who provided these code snippets.
 
-Feel free to use this code if you want.
+- Feel free to use this code if you want.
