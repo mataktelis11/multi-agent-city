@@ -41,3 +41,21 @@ function downloadCSVFile(csv_data) {
 	temp_link.click();
 	document.body.removeChild(temp_link);
 }
+
+function checkForm(){
+	var dims = parseInt(document.getElementById("typeNumber1").value);
+	var _numagents = parseInt(document.getElementById("typeNumber2").value);
+	var _numgoals = parseInt(document.getElementById("typeNumber3").value);
+	var _numwalls = parseInt(document.getElementById("typeNumber4").value);
+	var _numpots = parseInt(document.getElementById("typeNumber5").value);
+
+
+	var numbers = [dims, _numagents, _numgoals, _numwalls, _numpots];
+
+	for(var i=0; i<numbers.length; i++){
+		if(numbers[i]<=0 || isNaN(numbers[i]))
+			return "All input parameters must be positive integers";
+	}
+
+	return "";
+}

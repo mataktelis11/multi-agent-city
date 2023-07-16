@@ -7,18 +7,18 @@ var numRows = 30; 			// Number of rows in the grid 80
 var numCols = 31; 			// Number of columns in the grid 80
 
 // Map entities
-var numAgents = 6; 		    // Number of agents 10
+var numAgents = 10; 		    // Number of agents 10
 var numGoals = 2; 			// Number of goals 5
 var numWalls = 70;			// Number of walls 730
 var numEnergyPots = 40;	    // Number of energy pots 100
-var numGold = 2;			// Number of gold tokens 45
+var numGold = 40;			// Number of gold tokens 45
 
 var agentEnergy = 120;		// Base/Max energy of an agent 35
 
 // Prices and Energy
-var energyPotPrice = 2;		// Price of Energy pot in gold
-var mapPrice = 3;			// Price of map in gold
-var energyPerPot = 40;		// Energy points given by one pot
+var energyPotPrice = 1;		// Price of Energy pot in gold
+var mapPrice = 1;			// Price of map in gold
+var energyPerPot = 60;		// Energy points given by one pot
 
 // agent fields
 var agents;
@@ -35,6 +35,8 @@ var agentSteps;
 var agentsExecutingPlan;
 var agentDone;
 var numAgentsDone;
+
+var trade;
 
 var goals;
 
@@ -64,6 +66,17 @@ function containsObject(obj, list) {
         }
     }
     return false;
+}
+
+
+function containsAgent(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].row === obj.row && list[i].col === obj.col) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 // source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -267,11 +280,17 @@ function updateGridMonitor(index) {
 
     if(goalsFound[index] == numGoals){
 
-
+        // draw agent planned path
         for(var k=0; k<paths[index].length; k++){
             var step = paths[index][k];
 
             table.rows[step.row].cells[step.col].className = "path";
+        }
+
+        // redraw the goals
+        for(var k=0; k<numGoals; k++){
+            var goal = goals[k];
+            table.rows[goal.row].cells[goal.col].className = "goal";
         }
 
     }
@@ -464,7 +483,7 @@ function make_a_move3(i){
         var x = neighbors[k].row;
         var y = neighbors[k].col;
 
-        if(grid[x][y]==-2 && energyValues[i] <= energyPerPot*2){
+        if((grid[x][y]==-2 || grid[x][y]==-3) && energyValues[i] <= energyPerPot*2){
             return neighbors[k];
         }
 
@@ -602,12 +621,70 @@ function update() {
 
     if(stop) return;
 
+    currentIteration= currentIteration + 1;
+
     // Move each agent
     for (var i = 0; i < numAgents; i++) {
 
         if(energyValues[i]==0)
             continue;
 
+        // check for possible trades
+        if(trade){
+
+
+            for(var k=0; k<agents.length; k++){
+                if(agents[i].row == agents[k].row && agents[i].col == agents[k].col && i!=k){
+                    console.log(`Agent ${i} could trade with agent ${k}`);
+
+
+                    // if low energy and no collected pots
+                    if(energyValues[i] < energyPerPot && collectedPots[i] == 0){
+                        
+                        if(collectedPots[k]>0 && collectedGold[i]>=energyPotPrice){
+                            collectedPots[k] -= 1;
+                            collectedPots[i] += 1;
+                            collectedGold[i] -= energyPotPrice;
+                            collectedGold[k] +=energyPotPrice;
+
+                            console.log(`Agent ${i} bought an energy pot from agent ${k}`);
+                        }
+                    }
+
+                    if(collectedGold[k]>=mapPrice){
+
+                        // NOT CORRECT
+
+                        // console.log(`Agent ${i} will sell his map agent ${k}`);
+                        // collectedGold[i] += mapPrice;
+                        // collectedGold[k] -=mapPrice;
+
+                        // var goals1= goalsFound[i];
+                        // var goals2= goalsFound[k];
+
+                        // goalsFound[i] = Math.max(goals1,goals2);
+                        // goalsFound[k] = Math.max(goals1,goals2);
+
+
+
+
+
+                        // var memory1 = agent_memory[i];
+                        // var memory2 = agent_memory[k];
+
+                        // agent_memory[i] = memory1 || memory2;
+                        // agent_memory[k] = memory1 || memory2;
+
+                        // console.log(`Agent ${i} sold his map agent ${k}`);
+                    }
+
+
+                }
+            }
+
+        }
+        
+        // check if agent has found all the goals
         if(goalsFound[i] == numGoals && paths[i].length == 0){
 
             var startinhpath = bfs(agents[i],goals[0],i);
@@ -621,14 +698,9 @@ function update() {
             var endpath = bfs(goals[numGoals-1],agentStartingPositions[i],i);
             paths[i] = paths[i].concat(endpath);
 
-            //continue;
-
             //alert(`Agent ${i} found all goals`)
-
             agentsExecutingPlan[i] = true;
         }
-
-
 
 
         // if agent has energy pots
@@ -640,15 +712,18 @@ function update() {
             }
         }
         
+        // move agent
+
         var nextCell;
 
         if(goalsFound[i] == numGoals){
 
+            // check if agent completed the path
             if(pathIndex[i]==paths[i].length){
                 agentDone[i] = true;
                 numAgentsDone += 1;
 
-
+                // if this is the first agent to complete the path
                 if(numAgentsDone==1){
                     var div = document.getElementById('modalText');
                     div.innerText = `Agent ${i} found all goals and managed to complete his plan!\nThe simulation was paused`;
@@ -662,7 +737,6 @@ function update() {
                 
                 continue;
             }
-
             
             pathIndex[i] += 1;
             nextCell = paths[i][pathIndex[i]-1];
@@ -694,7 +768,7 @@ function update() {
     updateGrid();
     updateGridMonitor(monitorAgent);
 
-    currentIteration= currentIteration + 1;
+    
 
     if(!checkEnd())
         setTimeout(update, 40);
@@ -741,6 +815,8 @@ function initializeSimulation() {
 
     agentDone = new Array(numAgents).fill(false);
     numAgentsDone = 0;
+
+    trade = document.getElementById("flexCheckChecked").checked;
 
     createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
     updateGrid();
