@@ -42,6 +42,18 @@ function downloadCSVFile(csv_data) {
 	document.body.removeChild(temp_link);
 }
 
+function uniteMemories(memory1, memory2){
+	var result = [];
+	for(var i=0; i<memory1.length; i++){
+		var row = [];
+		for(var j=0; j<memory1[i].length; j++){
+			row.push(memory1[i][j]||memory2[i][j])
+		}
+		result.push(row)
+	}
+	return result;
+}
+
 function checkForm(){
 	var dims = parseInt(document.getElementById("typeNumber1").value);
 	var _numagents = parseInt(document.getElementById("typeNumber2").value);

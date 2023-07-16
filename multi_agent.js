@@ -655,27 +655,23 @@ function update() {
 
                         // NOT CORRECT
 
-                        // console.log(`Agent ${i} will sell his map agent ${k}`);
-                        // collectedGold[i] += mapPrice;
-                        // collectedGold[k] -=mapPrice;
+                        console.log(`Agent ${i} will sell his map agent ${k}`);
+                        collectedGold[i] += mapPrice;
+                        collectedGold[k] -=mapPrice;
 
-                        // var goals1= goalsFound[i];
-                        // var goals2= goalsFound[k];
+                        var both = 0;
 
-                        // goalsFound[i] = Math.max(goals1,goals2);
-                        // goalsFound[k] = Math.max(goals1,goals2);
+                        for(var g=0; g<numGoals; g++){
+                            if(agent_memory[i][goals[g].row][goals[g].col] || agent_memory[k][goals[g].row][goals[g].col])
+                                both+=1;
+                        }
+                        goalsFound[i] = both;
+                        goalsFound[k] = both;
 
+                        agent_memory[i] = uniteMemories(agent_memory[i],agent_memory[k]);
+                        agent_memory[k] = agent_memory[i];
 
-
-
-
-                        // var memory1 = agent_memory[i];
-                        // var memory2 = agent_memory[k];
-
-                        // agent_memory[i] = memory1 || memory2;
-                        // agent_memory[k] = memory1 || memory2;
-
-                        // console.log(`Agent ${i} sold his map agent ${k}`);
+                        console.log(`Agent ${i} sold his map agent ${k}`);
                     }
 
 
