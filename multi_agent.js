@@ -4,7 +4,7 @@
 
 // Map size
 var numRows = 30; 			// Number of rows in the grid 80
-var numCols = 31; 			// Number of columns in the grid 80
+var numCols = 30; 			// Number of columns in the grid 80
 
 // Map entities
 var numAgents = 10; 		    // Number of agents 10
@@ -38,8 +38,11 @@ var agentDone;
 var numAgentsDone;
 
 var trade;
+var numOfTrades;
 
 var goals;
+
+var delay = 40;
 
 // main map grid
 var grid = createGrid(numRows, numCols);
@@ -653,30 +656,39 @@ function update() {
                             collectedGold[i] -= energyPotPrice;
                             collectedGold[k] +=energyPotPrice;
 
+                            numOfTrades[i] += 1;
+                            numOfTrades[k] += 1;
                             console.log(`Agent ${i} bought an energy pot from agent ${k}`);
                         }
                     }
 
-                    if(collectedGold[k]>=mapPrice){
+                    if(collectedGold[k]>=mapPrice && energyValues[k]>0){
 
-                        // NOT CORRECT
-
-                        console.log(`Agent ${i} will sell his map agent ${k}`);
                         collectedGold[i] += mapPrice;
-                        collectedGold[k] -=mapPrice;
+                        collectedGold[k] -= mapPrice;
 
-                        var both = 0;
 
-                        for(var g=0; g<numGoals; g++){
-                            if(agent_memory[i][goals[g].row][goals[g].col] || agent_memory[k][goals[g].row][goals[g].col])
-                                both+=1;
-                        }
-                        goalsFound[i] = both;
-                        goalsFound[k] = both;
 
                         agent_memory[i] = uniteMemories(agent_memory[i],agent_memory[k]);
                         agent_memory[k] = agent_memory[i];
 
+
+                        var both = 0;
+
+                        for(var g=0; g<goals.length; g++){
+                            console.log(`g: ${g} (x, y) = (${goals[g].row}, ${goals[g].col})`)
+                            console.log(`agent_memory[i][goals[g].row][goals[g].col] = ${agent_memory[i][goals[g].row][goals[g].col]}`)
+                            if(agent_memory[i][goals[g].row][goals[g].col]){
+                                both += 1;
+                            }                               
+                        }
+
+                        console.log(`Both ${both}`)
+                        goalsFound[i] = both;
+                        goalsFound[k] = both;
+
+                        numOfTrades[i] += 1;
+                        numOfTrades[k] += 1;
                         console.log(`Agent ${i} sold his map agent ${k}`);
                     }
 
@@ -775,7 +787,7 @@ function update() {
     
 
     if(!checkEnd())
-        setTimeout(update, 40);
+        setTimeout(update, delay);
 }	
 
 
@@ -822,6 +834,8 @@ function initializeSimulation() {
     agentInitialPos = new Array(numAgents).fill({row:0,col:0});
 
     trade = document.getElementById("flexCheckChecked").checked;
+    numOfTrades = new Array(numAgents).fill(0);
+
 
     createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEnergyPots, numGold)
     updateGrid();
@@ -876,22 +890,18 @@ function initializeSimulation() {
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
     cell1.innerHTML = "Agent";
     cell2.innerHTML = "Steps";
     cell3.innerHTML = "Trades";
-    cell4.innerHTML = "Explored";
 
     for(var i=0; i<agents.length; i++){
         var row = table.insertRow(-1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
         cell1.innerHTML = i;
         cell2.innerHTML = "0";
         cell3.innerHTML = "0";
-        cell4.innerHTML = "0";
     }
 
 
@@ -914,6 +924,18 @@ function initializeSimulation() {
         li.setAttribute("onclick", "setMonitorAgent("+i+")");
         ul.appendChild(li);
     }	
+
+    // source: https://stackoverflow.com/questions/20673959/how-to-add-new-li-to-ul-onclick-with-javascript
+
+
+    var ul = document.getElementById("goalcoors");
+    ul.innerHTML = "";
+    for(var i=0; i<goals.length; i++){
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(`Goal ${i}: (x,y) = (${goals[i].row}, ${goals[i].col})`));
+        ul.appendChild(li);
+    }
+
 
 }
 
@@ -952,7 +974,7 @@ function updateMonitorTable2(){
 
     for(var i=0; i<agents.length; i++){
         table.rows[i+1].cells[1].innerHTML = agentSteps[i];
-
+        table.rows[i+1].cells[2].innerHTML = numOfTrades[i];
     }	
 }
 
