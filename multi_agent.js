@@ -6,21 +6,20 @@
 var numRows = 30; 			// Number of rows in the grid 80
 var numCols = 30; 			// Number of columns in the grid 80
 
-// Map entities
-var numAgents = 10; 		    // Number of agents 10
+// Map entities number
+var numAgents = 10; 		// Number of agents 10
 var numGoals = 2; 			// Number of goals 5
 var numWalls = 70;			// Number of walls 730
 var numEnergyPots = 40;	    // Number of energy pots 100
 var numGold = 40;			// Number of gold tokens 45
 
-var agentEnergy = 120;		// Base/Max energy of an agent 35
-
 // Prices and Energy
+var agentEnergy = 120;		// Base/Max energy of an agent 35
 var energyPotPrice = 1;		// Price of Energy pot in gold
 var mapPrice = 1;			// Price of map in gold
 var energyPerPot = 60;		// Energy points given by one pot
 
-var delay = 40;
+var delay = 40;             // dey between ticks of the simulation
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -312,6 +311,7 @@ function updateGridMonitor(index) {
 
 }
 
+
 // get neighboring cells
 function getNeighbors(cell) {
 
@@ -386,73 +386,8 @@ function getAllNeighbors(cell) {
 }
 
 
-// get next cell for agent
-function getNextCell(cell) {
-    var neighbors = getNeighbors(cell);
-
-
-
-    return neighbors[getRndInteger(0, neighbors.length - 1)];
-}
-
 // explore blind
 function make_a_move(i){
-
-    
-    var curr_mem = agent_memory[i];
-    curr_mem[agents[i].row][agents[i].col] = true;
-
-    var neighbors = getNeighbors(agents[i]);
-
-    for(var k=0; k<neighbors.length; k++){
-        if(curr_mem[neighbors[k].row][neighbors[k].col] == false)
-            return neighbors[k];
-    }
-
-    return neighbors[getRndInteger(0, neighbors.length - 1)];
-}
-
-
-function make_a_move2(i){
-
-    
-    var curr_mem = agent_memory[i];
-    curr_mem[agents[i].row][agents[i].col] = true;
-
-    var neighbors = getNeighbors(agents[i]);
-
-    neighbors = shuffle(neighbors);
-
-    for(var k=0; k<neighbors.length; k++){
-        curr_mem[neighbors[k].row][neighbors[k].col] = true;
-    }
-
-    for(var k=0; k<neighbors.length; k++){
-        var neighborsDeep = getNeighbors(neighbors[k]);
-        neighborsDeep = shuffle(neighborsDeep);
-
-        if(neighborsDeep.length==0){
-            console.log("EMPTY DEEP search")
-            continue;
-        }
-            
-
-        for(var j=0; j<neighborsDeep.length; j++){
-            if(curr_mem[neighborsDeep[j].row][neighborsDeep[j].col] == false)
-                return neighborsDeep[j];
-        }
-
-        
-    }
-
-    if(neighbors.length==0){
-            console.log("EMPTY SEARCH") // THIS BREAKS THE PROGRAM
-        }
-
-    return neighbors[getRndInteger(0, neighbors.length - 1)];
-}
-
-function make_a_move3(i){
     var curr_mem = agent_memory[i];
     curr_mem[agents[i].row][agents[i].col] = true;
 
@@ -515,7 +450,10 @@ function make_a_move3(i){
 
     if(possibleChoices.length==0){
         console.log("EMPTY SEARCH") // THIS BREAKS THE PROGRAM - add a modal
-        
+        var myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
+            keyboard: false
+        });
+        myModal.toggle();
     }
 
     return possibleChoices[getRndInteger(0, possibleChoices.length - 1)];
@@ -763,7 +701,7 @@ function update() {
             pathIndex[i] += 1;
             nextCell = paths[i][pathIndex[i]-1];
         } else{
-            nextCell = make_a_move3(i);
+            nextCell = make_a_move(i);
         }
   
         agents[i] = nextCell;
@@ -795,7 +733,11 @@ function update() {
     if(!checkEnd()){
         setTimeout(update, delay);
     } else {
-        alert("Simulation has ended."); // replace with modal
+        //alert("Simulation has ended."); // replace with modal
+        var myModal = new bootstrap.Modal(document.getElementById('endmodal'), {
+            keyboard: false
+        });
+        myModal.toggle();
     }
         
 }	
@@ -806,7 +748,15 @@ function update() {
 function startSimulation(){
 
     if(checkEnd()){
-        alert("Simulation has ended. Please start a new simulation"); // replace with modal
+        //alert("Simulation has ended. Please start a new simulation"); // replace with modal 
+        var myModal = new bootstrap.Modal(document.getElementById('endmodal2'), {
+            keyboard: false
+        });
+        myModal.toggle();
+        return;
+    }
+
+    if(!stop){
         return;
     }
 
@@ -815,7 +765,6 @@ function startSimulation(){
     updateGrid();
 
     update();
-
 }
 
 function pauseSimulation() {
