@@ -1,6 +1,6 @@
 // Multi agent city main script
 
-////////////////////// Global Parameters ////////////////////////////////
+////////////////////// Global Simulation Parameters ////////////////////////////////
 
 // Map size
 var numRows = 30; 			// Number of rows in the grid 80
@@ -19,6 +19,10 @@ var agentEnergy = 120;		// Base/Max energy of an agent 35
 var energyPotPrice = 1;		// Price of Energy pot in gold
 var mapPrice = 1;			// Price of map in gold
 var energyPerPot = 60;		// Energy points given by one pot
+
+var delay = 40;
+
+///////////////////////////////////////////////////////////////////////////
 
 // agent fields
 var agents;
@@ -42,8 +46,6 @@ var numOfTrades;
 
 var goals;
 
-var delay = 40;
-
 // main map grid
 var grid = createGrid(numRows, numCols);
 
@@ -54,9 +56,10 @@ var stop = false;
 var monitorAgent = 0;
 var currentIteration = 0;
 
-///////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 
-// utility functions
+////////////// utility functions /////////////////////////
+
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min+ 1) ) + min;
 }
@@ -102,7 +105,8 @@ function shuffle(array) {
     return array;
 }
 
-// initialize  2D grid
+///////////////////////////////////
+
 function createGrid(rows, cols) {
     var grid = [];
     for (var i = 0; i < rows; i++) {
@@ -174,9 +178,6 @@ function createEntities(numRows, numCols, numAgents, numGoals, numWalls, numEner
         k = k + 1;
     }
 }
-
-
-
 
 
 // Update grid and display
@@ -512,6 +513,11 @@ function make_a_move3(i){
         }
     }		
 
+    if(possibleChoices.length==0){
+        console.log("EMPTY SEARCH") // THIS BREAKS THE PROGRAM - add a modal
+        
+    }
+
     return possibleChoices[getRndInteger(0, possibleChoices.length - 1)];
 }
 
@@ -786,14 +792,23 @@ function update() {
 
     
 
-    if(!checkEnd())
+    if(!checkEnd()){
         setTimeout(update, delay);
+    } else {
+        alert("Simulation has ended."); // replace with modal
+    }
+        
 }	
 
 
 
 
 function startSimulation(){
+
+    if(checkEnd()){
+        alert("Simulation has ended. Please start a new simulation"); // replace with modal
+        return;
+    }
 
     stop = false;
     // Start simulation
