@@ -570,9 +570,9 @@ function checkEnd() {
 
 
 // run simulation of one step
-function update() {
+function update(isStep) {
 
-    if(stop) return;
+    if(stop && !isStep) return;
 
     currentIteration= currentIteration + 1;
 
@@ -730,9 +730,9 @@ function update() {
 
     
 
-    if(!checkEnd()){
-        setTimeout(update, delay);
-    } else {
+    if(!checkEnd() && !isStep){
+        setTimeout(update, delay, false);
+    } else if(checkEnd()){
         //alert("Simulation has ended."); // replace with modal
         var myModal = new bootstrap.Modal(document.getElementById('endmodal'), {
             keyboard: false
@@ -764,11 +764,31 @@ function startSimulation(){
     // Start simulation
     updateGrid();
 
-    update();
+    update(false);
 }
 
 function pauseSimulation() {
     stop = true;
+}
+
+function stepSimulation() {
+    if(checkEnd()){
+        //alert("Simulation has ended. Please start a new simulation"); // replace with modal 
+        var myModal = new bootstrap.Modal(document.getElementById('endmodal2'), {
+            keyboard: false
+        });
+        myModal.toggle();
+        return;
+    }
+
+    if(!stop){
+        return;
+    }
+
+    console.log("called")
+
+    update(true);
+
 }
 
 function initializeSimulation() {
