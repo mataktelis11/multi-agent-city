@@ -266,7 +266,7 @@
 									<div class="form-outline">
 										<input type="number" id="typeNumber1" class="form-control m-1" placeholder="Grid Dimentions (30)"/>
 				
-										<input type="number" id="typeNumber2" class="form-control m-1" placeholder="Number of Agents (30)"/>
+										<input type="number" id="typeNumber2" class="form-control m-1" placeholder="Number of Agents (10)"/>
 		
 										<input type="number" id="typeNumber3" class="form-control m-1" placeholder="Number of Goals (2)"/>
 		
@@ -445,11 +445,26 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="badfieldsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<h5 class="modal-title">Invalid fields!</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="modalTextfields">
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+			</div>
+		</div>
+		</div>
+	</div>
+
 
 </main>
-
-	<script src="multi_agent.js" charset='utf-8'></script>
 	<script src="auxiliary.js"></script>
+	<script src="multi_agent.js" charset='utf-8'></script>
   	<script src="bootstrap-5.3.0-dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

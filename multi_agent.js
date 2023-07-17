@@ -791,11 +791,122 @@ function stepSimulation() {
 
 }
 
+function setupfields() {
+
+}
+
 function initializeSimulation() {
 
     // halt simulation
     stop = true;
     currentIteration = 0;
+
+    var message = checkForm();
+
+    if(message.length >0){
+        var div = document.getElementById('modalTextfields');
+        div.innerText = message;
+
+        var myModal = new bootstrap.Modal(document.getElementById('badfieldsModal'), {
+            keyboard: false
+        });
+        myModal.toggle();
+        return;
+    }
+
+    var dims = parseInt(document.getElementById("typeNumber1").value);
+	var _numagents = parseInt(document.getElementById("typeNumber2").value);
+	var _numgoals = parseInt(document.getElementById("typeNumber3").value);
+	var _numwalls = parseInt(document.getElementById("typeNumber4").value);
+	var _numpots = parseInt(document.getElementById("typeNumber5").value);
+	var _numtokens = parseInt(document.getElementById("typeNumber6").value);
+	var _agentbaseEnergy = parseInt(document.getElementById("typeNumber7").value);
+	var _mapprice = parseInt(document.getElementById("typeNumber8").value);
+	var _potprice = parseInt(document.getElementById("typeNumber9").value);
+	var _potenergy = parseInt(document.getElementById("typeNumber10").value);
+	var _delay = parseInt(document.getElementById("typeNumber11").value);
+
+    // please let me know if you can write this in a better way :)
+
+    if(!isNaN(dims)){
+        numRows = dims;
+        numCols = dims;
+    } else{
+        numRows = 30; 			
+        numCols = 30; 
+    }
+
+    if(!isNaN(_numagents)){
+        numAgents = _numagents;
+    } else {
+        numAgents = 10;
+    }
+
+    if(!isNaN(_numgoals)){
+        numGoals = _numgoals; 
+    } else {
+        numGoals = 2; 
+    }
+
+    if(!isNaN(_numwalls)){
+        numWalls = _numwalls; 
+    } else {
+        numWalls = 70; 
+    }
+
+    if(!isNaN(_numpots)){
+        numEnergyPots = _numpots;
+    } else {
+        numEnergyPots = 40;
+    }
+
+    if(!isNaN(_numtokens)){
+        numGold = _numtokens; 
+    } else {
+        numGold = 40; 
+    }
+
+    if(!isNaN(_agentbaseEnergy)){
+        agentEnergy = _agentbaseEnergy; 
+    } else {
+        agentEnergy = 120; 
+    }
+
+    if(!isNaN(_mapprice)){
+        mapPrice = _mapprice; 
+    } else {
+        mapPrice = 1; 
+    }
+
+    if(!isNaN(_potprice)){
+        energyPotPrice = _potprice; 
+    } else {
+        energyPotPrice = 1; 
+    }
+
+    if(!isNaN(_potenergy)){
+        energyPerPot = _potenergy; 
+    } else {
+        energyPerPot = 60; 
+    }
+
+    if(!isNaN(_delay)){
+        delay = _delay; 
+    } else {
+        delay = 40; 
+    }
+
+    if(numRows*numCols < numAgents + numGoals + numWalls + numEnergyPots + numGold){
+        var div = document.getElementById('modalTextfields');
+        div.innerText = "Map dimensions are too small to fit all the entities.";
+
+        var myModal = new bootstrap.Modal(document.getElementById('badfieldsModal'), {
+            keyboard: false
+        });
+        myModal.toggle();
+        return;
+    }
+    
     
     grid = createGrid(numRows, numCols);
 

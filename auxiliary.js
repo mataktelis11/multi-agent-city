@@ -54,20 +54,35 @@ function uniteMemories(memory1, memory2){
 	return result;
 }
 
-function checkForm(){
+function checkForm() {
 	var dims = parseInt(document.getElementById("typeNumber1").value);
 	var _numagents = parseInt(document.getElementById("typeNumber2").value);
 	var _numgoals = parseInt(document.getElementById("typeNumber3").value);
 	var _numwalls = parseInt(document.getElementById("typeNumber4").value);
 	var _numpots = parseInt(document.getElementById("typeNumber5").value);
+	var _numtokens = parseInt(document.getElementById("typeNumber6").value);
+	var _agentbaseEnergy = parseInt(document.getElementById("typeNumber7").value);
+	var _mapprice = parseInt(document.getElementById("typeNumber8").value);
+	var _potprice = parseInt(document.getElementById("typeNumber9").value);
+	var _potenergy = parseInt(document.getElementById("typeNumber10").value);
+	var _delay = parseInt(document.getElementById("typeNumber11").value);
 
 
-	var numbers = [dims, _numagents, _numgoals, _numwalls, _numpots];
+	var numbers = [dims, _numagents, _numgoals, _numwalls, _numpots,
+					_numtokens, _agentbaseEnergy, _mapprice, _potprice,
+					_potenergy, _delay];
 
 	for(var i=0; i<numbers.length; i++){
-		if(numbers[i]<=0 || isNaN(numbers[i]))
-			return "All input parameters must be positive integers";
+
+		if(isNaN(numbers[i]))
+			continue;
+
+		if(numbers[i]<=0)
+			return "All input parameters must be positive integers.";
 	}
+
+	if(dims*dims < _numagents + _numgoals + _numwalls + _numpots + _numtokens)
+		return "Map dimensions are too small to fit all the entities."
 
 	return "";
 }
