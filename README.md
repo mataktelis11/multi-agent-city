@@ -15,6 +15,8 @@ Once an agent finds all the goals in the map, it will plan it's path and proceed
 Under the main table we display the knowledge of a specified agent. As the agent explores the grid, it marks which cells he visited and tries to explore as much of the map as possible. Once all the goals are found, the agent will plan a path using BFS. This path visits all the goals and returns to the agent's original starting position.
 
 
+<img src="https://github.com/mataktelis11/multi-agent-city/assets/61196956/603a57e3-9ce1-4410-9c02-ffaa4fae8f15" width="330">
+
 The agent's knowledge of the map may increase dramatically sometimes, because it will trade knowledge with other agents.
 
 
@@ -22,25 +24,31 @@ The agent's knowledge of the map may increase dramatically sometimes, because it
 
 To run the simulation simply click "Initialize Random Simulation" on the right and then click "Start Simulation" on the top.
 
-You can monitor the stats of each agent in the tables on the right.
+
+<img src="https://github.com/mataktelis11/multi-agent-city/assets/61196956/1bdaa9cc-6bff-4495-aeef-1780c4160e0c" width="800">
+
+You can monitor the stats of each agent in the tables on the right. Each of the tables can also  exported to a csv file by pressing the corresponding button.
+
+<img src="https://github.com/mataktelis11/multi-agent-city/assets/61196956/e5b87491-30c2-41ac-b2d1-91fb016016c3" width="650">
+
+<img src="https://github.com/mataktelis11/multi-agent-city/assets/61196956/3d324148-7182-4dfe-9e1b-fe8995756582" width="650">
 
 Each time you click "Initialize Random Simulation" a random grid will be generated. You can click the button "Show/Hide Input fields" to see all the available parameters. In the parenthesis we specify the default value that will be used if you do not fill in the specific field. After you fill in the inputs you want, click "Initialize Random Simulation".
+
+<img src="https://github.com/mataktelis11/multi-agent-city/assets/61196956/f1076724-a99e-4b80-9ef0-5f4dbfc61a2f" width="800">
 
 At any moment you can pause the simulation with the button on the top and resume it by clicking the start button again. If the simulation is paused you can use the "Step simulation" button to update the grid one step at a time.
 
 Each agent uses **BFS** to create his plan/path. He needs to start from his current position, visit each goal in a special order and then go back to his original starting position (his home) from the beginning of the simulation. When an agent has created a plan, you can see it in his memory grid as well (yellow).
 
 
+<img src="https://github.com/mataktelis11/multi-agent-city/assets/61196956/b0b8c60c-1bdb-4291-a842-59c81b8b289f" width="300">
 
 When the first agent successfully completes his task, a pop up message will appear. The simulation is paused but you can resume it to see what the rest of the agents will manage to do.
 
-
-Each of the tables on the right can also be exported to a csv file by pressing the corresponding button.
-
-
 ## Implementation
 
-This app consists of only Html and Javascript, so it can be deployed to Github pages and used immediately be any browser. I also used Bootstrap (5.3) to give a somewhat better look to the page.
+This app consists of only Html and Javascript, so it can be deployed to Github pages and used immediately by any browser. I also used Bootstrap (5.3) to give a somewhat better look to the page.
 
 Keep in mind that for a grid of size bigger than $50 \times 50$ the app can get slow quite easily.
 
