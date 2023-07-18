@@ -105,7 +105,7 @@
 
 
 
-		  <div class="col-lg-9">
+		  <div class="col-lg-8">
 
 			Main Controls:
 			<div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -330,7 +330,11 @@
 							  </ul>
 							  <p class="text-justify" id="iteration"> Iteration:</p>
 						</div>
-						<button type="button" class="btn btn-dark m-1" onclick='downloadCSVFile(tableToCSV("monitor"));'><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
+						<button type="button" class="btn btn-dark m-1" onclick="startSimulation()"><i class="bi bi-caret-right-square"></i> Start Simulation</button>
+
+						<button type="button" class="btn btn-dark m-1" onclick="pauseSimulation()"><i class="bi bi-pause-circle"></i> Pause Simulation</button>
+
+						<button type="button" class="btn btn-dark m-1" onclick="stepSimulation()"><i class="bi bi-skip-forward-circle"></i> Step Simulation</button>
 
 						<button type="button" class="btn btn-dark m-1" onclick='downloadCSVFile(tableToCSV("monitor"));'><i class="bi bi-box-arrow-up-right"></i> Export to CSV</button>
 					</div>

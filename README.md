@@ -18,28 +18,18 @@ Under the main table we display the knowledge of a specified agent. As the agent
 The agent's knowledge of the map may increase dramatically sometimes, because it will trade knowledge with other agents.
 
 
-## Details
+## Usage
 
 To run the simulation simply click "Initialize Random Simulation" on the right and then click "Start Simulation" on the top.
 
 You can monitor the stats of each agent in the tables on the right.
 
+Each time you click "Initialize Random Simulation" a random grid will be generated. You can click the button "Show/Hide Input fields" to see all the available parameters. In the parenthesis we specify the default value that will be used if you do not fill in the specific field. After you fill in the inputs you want, click "Initialize Random Simulation".
 
-Also under the main grid there is a another grid which displays the memory of an agent. In other words the second grid displays which parts of the map an agent has visited/knows.
+At any moment you can pause the simulation with the button on the top and resume it by clicking the start button again. If the simulation is paused you can use the "Step simulation" button to update the grid one step at a time.
 
-You can use the drop-down menu to choose which agent's memory you want to display.
+Each agent uses **BFS** to create his plan/path. He needs to start from his current position, visit each goal in a special order and then go back to his original starting position (his home) from the beginning of the simulation. When an agent has created a plan, you can see it in his memory grid as well (yellow).
 
-You can also generate a random city grid with your own parameters. Click show input fields, fill in the parameters and then click Initialize random simulation.
-
-At any moment you can pause the simulation with the button on the top and resume it by clicking star again.
-
-
-When the simulation is paused you can also use the step button to update the simulation one frame at a time.
-
-
-Each agent uses BFS to create his plan/path. He needs to start from his current position, visit each goal in a special order and then go back to his original starting position (his home) from the beginning of the simulation.
-
-When an agent has created a plan, you can see it in his memory grid as well.
 
 
 When the first agent successfully completes his task, a pop up message will appear. The simulation is paused but you can resume it to see what the rest of the agents will manage to do.
@@ -48,10 +38,15 @@ When the first agent successfully completes his task, a pop up message will appe
 Each of the tables on the right can also be exported to a csv file by pressing the corresponding button.
 
 
+## Implementation
+
+This app consists of only Html and Javascript, so it can be deployed to Github pages and used immediately be any browser. I also used Bootstrap (5.3) to give a somewhat better look to the page.
+
+Keep in mind that for a grid of size bigger than $50 \times 50$ the app can get slow quite easily.
 
 ## Disclaimer
 
-- This project was made for a university project in a relatively short period of time, so please don't take it too seriously. The code is obviously not optimized and I'm sure you will find errors.
+- This project was made for a university project (course name is 'Intelligent Agents') in a relatively short period of time, so please don't take it too seriously. The code is obviously not optimized and I'm sure you will find errors.
 
 - The reason I used Html and Javascript is because I wanted to also try out Github pages. I am aware this implementation is not ideal.
 
